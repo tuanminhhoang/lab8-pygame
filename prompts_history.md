@@ -44,3 +44,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 12:41
 - **Prompt**: what the problem here
 
+### 05-04-2026 12:46
+- **Prompt**: why does velocity reduce when it bounces
+

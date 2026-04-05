@@ -102,3 +102,8 @@
 - **Hook Version**: 1.02
 - **Date**: 05-04-2026 12:41
 - **Prompt**: what the problem here
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 05-04-2026 12:46
+- **Prompt**: why does velocity reduce when it bounces
