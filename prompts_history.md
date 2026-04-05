@@ -47,3 +47,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 12:46
 - **Prompt**: why does velocity reduce when it bounces
 
+### 05-04-2026 13:35
+- **Prompt**: document my main.py and update readme.md
+
