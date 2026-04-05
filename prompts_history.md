@@ -26,3 +26,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 12:04
 - **Prompt**: can you check my current code?
 
+### 05-04-2026 12:07
+- **Prompt**: I dont understand how the square size work, can you explain it to me? where does the square start?
+
