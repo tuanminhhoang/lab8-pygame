@@ -38,3 +38,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 12:27
 - **Prompt**: how to import random to give a random start for each square
 
+### 05-04-2026 12:28
+- **Prompt**: instruct me how to use library random
+
