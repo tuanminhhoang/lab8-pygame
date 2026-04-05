@@ -51,3 +51,19 @@
 - **Hook Version**: 1.02
 - **Date**: 05-04-2026 11:31
 - **Prompt**: Append a new JOURNAL.md entry for this user request in chronological order using the repository template. Include timestamp, prompt verbatim, Socratic mode ON, model GPT-5.3-Codex, and summarize: configured local .venv, installed pygame, created requirements.txt with pinned pygame version, created README.md with setup/run instructions, and verified pygame import/version from .venv.
+### **New Interaction**
+- **Agent Version**: 2.2
+- **Date**: 05-04-2026 11:31
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: Append a new JOURNAL.md entry for this user request in chronological order using the repository template. Include timestamp, prompt verbatim, Socratic mode ON, model GPT-5.3-Codex, and summarize: configured local .venv, installed pygame, created requirements.txt with pinned pygame version, created README.md with setup/run instructions, and verified pygame import/version from .venv.
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: Configured local .venv, installed pygame, created requirements.txt with pinned pygame version, created README.md with setup and run instructions, and verified pygame import and version from the .venv interpreter.
+- **Context and Reasons for Changes**: Set up a reproducible local Python environment for pygame development, documented setup/run workflow for consistency, and validated installation by importing pygame and printing its version from the project virtual environment.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 05-04-2026 11:49
+- **Prompt**: what is dt and what does clamp postition mean?
