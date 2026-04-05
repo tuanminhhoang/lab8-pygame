@@ -122,3 +122,14 @@
 - **Hook Version**: 1.02
 - **Date**: 05-04-2026 13:36
 - **Prompt**: Append a new JOURNAL.md entry for this interaction in chronological order using the repository template. Include timestamp, prompt verbatim, Socratic mode ON, model GPT-5.3-Codex, and summarize that main.py documentation was expanded and README.md was updated with a clearer project overview, setup, run, and notes section.
+### **New Interaction**
+- **Agent Version**: 2.2
+- **Date**: 05-04-2026 13:36
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: Append a new JOURNAL.md entry for this interaction in chronological order using the repository template. Include timestamp, prompt verbatim, Socratic mode ON, model GPT-5.3-Codex, and summarize that main.py documentation was expanded and README.md was updated with a clearer project overview, setup, run, and notes section.
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: Expanded main.py documentation and updated README.md with a clearer project overview, setup, run, and notes section.
+- **Context and Reasons for Changes**: Improved in-repo documentation so the project purpose and usage are easier to understand and follow for future runs.
+
