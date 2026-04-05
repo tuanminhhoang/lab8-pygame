@@ -29,3 +29,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 12:07
 - **Prompt**: I dont understand how the square size work, can you explain it to me? where does the square start?
 
+### 05-04-2026 12:15
+- **Prompt**: because i dont know the syntax of pygame, suggest me how i can do this without giving me any code or pseudocode
+

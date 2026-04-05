@@ -77,3 +77,8 @@
 - **Hook Version**: 1.02
 - **Date**: 05-04-2026 12:07
 - **Prompt**: I dont understand how the square size work, can you explain it to me? where does the square start?
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 05-04-2026 12:15
+- **Prompt**: because i dont know the syntax of pygame, suggest me how i can do this without giving me any code or pseudocode
