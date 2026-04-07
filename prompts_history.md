@@ -56,3 +56,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 05-04-2026 13:36
 - **Prompt**: Append a new JOURNAL.md entry for this interaction in chronological order using the repository template. Include timestamp, prompt verbatim, Socratic mode ON, model GPT-5.3-Codex, and summarize that main.py documentation was expanded and README.md was updated with a clearer project overview, setup, run, and notes section.
 
+### 07-04-2026 14:14
+- **Prompt**: why does it not work
+

@@ -133,3 +133,8 @@
 - **Changes Made**: Expanded main.py documentation and updated README.md with a clearer project overview, setup, run, and notes section.
 - **Context and Reasons for Changes**: Improved in-repo documentation so the project purpose and usage are easier to understand and follow for future runs.
 
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 07-04-2026 14:14
+- **Prompt**: why does it not work
