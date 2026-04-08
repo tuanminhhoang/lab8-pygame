@@ -59,3 +59,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 07-04-2026 14:14
 - **Prompt**: why does it not work
 
+### 08-04-2026 23:42
+- **Prompt**: here, how can I apply rotate logic so that it can have a rotate speed
+

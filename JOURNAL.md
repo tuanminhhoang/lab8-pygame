@@ -138,3 +138,8 @@
 - **Hook Version**: 1.02
 - **Date**: 07-04-2026 14:14
 - **Prompt**: why does it not work
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 08-04-2026 23:42
+- **Prompt**: here, how can I apply rotate logic so that it can have a rotate speed
