@@ -80,3 +80,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 09-04-2026 00:24
 - **Prompt**: after a while, all cubes like run to the right bound
 
+### 09-04-2026 00:27
+- **Prompt**: for now, document my main, and update my readme
+
