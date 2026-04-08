@@ -148,3 +148,19 @@
 - **Hook Version**: 1.02
 - **Date**: 08-04-2026 23:42
 - **Prompt**: Append a new entry at the end of JOURNAL.md using the repository template for this exact user prompt: "here, how can I apply rotate logic so that it can have a rotate speed". Use current date/time, User: tuan-minh.hoang@epita.fr, CoPilot Mode: Ask, CoPilot Model: GPT-5.3-Codex, Socratic Mode: ON. Changes Made: no code changes; explained how to add turn-rate-limited rotation logic for squares. Context and Reasons for Changes: user asked how to apply rotate logic with rotate speed, so guidance focused on angle clamping by max turn per frame and related correctness checks.
+### **New Interaction**
+- **Agent Version**: 2.2
+- **Date**: 08-04-2026 23:42
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: here, how can I apply rotate logic so that it can have a rotate speed
+- **CoPilot Mode**: Ask
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: no code changes; explained how to add turn-rate-limited rotation logic for squares.
+- **Context and Reasons for Changes**: user asked how to apply rotate logic with rotate speed, so guidance focused on angle clamping by max turn per frame and related correctness checks.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 08-04-2026 23:44
+- **Prompt**: so first, identify any flaws in my whole code
