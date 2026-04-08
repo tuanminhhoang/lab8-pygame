@@ -179,3 +179,8 @@
 - **Hook Version**: 1.02
 - **Date**: 09-04-2026 00:10
 - **Prompt**: so the idea of this code is each frame, a square will check for the closest square that is larger than itself, then it will rotate it direction in a angle to "flee" away. However, when I ran my code, after sometime, most of the blocks got stuck or just run to the border
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 09-04-2026 00:24
+- **Prompt**: after a while, all cubes like run to the right bound
