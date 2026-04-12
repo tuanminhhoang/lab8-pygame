@@ -68,7 +68,7 @@ class Square:
         else:
             return self
 
-    def rotate_angle(self, others: List[Square], dt: float):
+    def run_away(self, others: List[Square], dt: float):
         """Rotate current velocity away from the nearest larger square.
 
         The rotation amount is clamped by a per-frame turn rate so steering is
@@ -78,13 +78,15 @@ class Square:
         if threat is self:
             return self.moving_vector
         v = Vector2(self.center - threat.center)
+        v = v.normalize()
         if v.length_squared() == 0:
             return self.moving_vector
-        angle = self.moving_vector.angle_to(v)
-        rotation_speed = 120 * dt
-        angle = max(-rotation_speed, min(rotation_speed, angle))
-        new_vector = self.moving_vector.rotate(angle)
-        return new_vector
+        avoid_speed = 200
+        self.moving_vector += v * avoid_speed * dt
+        max_speed = 100
+        if self.moving_vector.length() > max_speed:
+            self.moving_vector.scale_to_length(max_speed)
+        return self.moving_vector
 
 
 def create_squares(count: int) -> List[Square]:
@@ -95,8 +97,8 @@ def create_squares(count: int) -> List[Square]:
         size = random.randint(20, 40)
         x = random.randint(0, SCREEN_WIDTH - size)
         y = random.randint(0, SCREEN_HEIGHT - size)
-        vx = random.randint(-100, 100)
-        vy = random.randint(-100, 100)
+        vx = random.randint(50, 100)
+        vy = random.randint(50, 100)
         squares.append(Square(x=x, y=y, vx=vx, vy=vy, size=size))
     return squares
 
@@ -121,6 +123,15 @@ def check_for_bounds(square: Square, bounds: Tuple[int, int], dt: float):
 
     return square.x, square.y, square.moving_vector
 
+def free_from_border(square: Square, bounds: Tuple[int, int]):
+    if square.x <= 1 or square.x >= bounds[0] - square.size - 1:
+        if abs(square.moving_vector.x) < 30:
+            square.moving_vector.x += 100
+        
+    if square.y <= 1 or square.y >= bounds[1] - square.size - 1:
+        if abs(square.moving_vector.y) < 30:
+            square.moving_vector.y += 100
+    return square.moving_vector
 
 def update_square(
     square: Square, squares: List[Square], bounds: Tuple[int, int], dt: float
@@ -133,12 +144,15 @@ def update_square(
     3. refresh derived center position
     4. resolve boundary collisions
     """
-    square.moving_vector = square.rotate_angle(squares, dt)
+    square.moving_vector = square.run_away(squares, dt)
 
     square.x += float(square.moving_vector[0]) * dt
     square.y += float(square.moving_vector[1]) * dt
 
     square.x, square.y, square.moving_vector = check_for_bounds(square, bounds, dt)
+
+    square.moving_vector = free_from_border(square, bounds)
+
     square.center = Vector2((square.x + square.size) / 2, (square.y + square.size) / 2)
 
 def update_world(squares: List[Square], bounds: Tuple[int, int], dt: float) -> None:
