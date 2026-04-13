@@ -19,8 +19,8 @@ from pygame.math import Vector2
 import pygame
 import random
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 FPS = 60
 SQUARE_COUNT = 30
 BACKGROUND_COLOR = (20, 24, 28)
@@ -97,8 +97,8 @@ def create_squares(count: int) -> List[Square]:
         size = random.randint(20, 40)
         x = random.randint(0, SCREEN_WIDTH - size)
         y = random.randint(0, SCREEN_HEIGHT - size)
-        vx = random.randint(50, 100)
-        vy = random.randint(50, 100)
+        vx = 500
+        vy = 500
         squares.append(Square(x=x, y=y, vx=vx, vy=vy, size=size))
     return squares
 
