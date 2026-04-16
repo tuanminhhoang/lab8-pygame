@@ -243,6 +243,22 @@
 - **Prompt**: can you update CODE_EXPLORER.html with my new code?
 
 ### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 16-04-2026 14:30
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: Generate a comprehensive code explorer HTML dashboard for a pygame project...
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: Claude Haiku 4.5
+- **Socratic Mode**: OFF (Code Explorer Mode activated)
+- **Changes Made**: Updated CODE_EXPLORER.html with complete, interactive dashboard. Analyzed main.py (Square class, steering behavior, delta-time physics, boundary checking, lifespan tracking) and example.py (minimal pygame template). Generated 6 tabs: Architecture (with 5 Mermaid diagrams: game loop, call graph, per-frame sequence, data flow, steering behavior), Patterns & Issues (3 good patterns + 2 potential issues with 3-layer analysis each), Type Hints (3/5 score with strengths/gaps), Code Review (5 items with severity HIGH/MEDIUM/LOW), Performance (3/6 score with wins/risks), Resources (learning links + exercises). All self-contained, mobile-responsive, dark theme, vanilla JavaScript.
+- **Context and Reasons for Changes**: User requested comprehensive learning dashboard for pygame steering simulation. Code Explorer mode engaged for deep analysis without Socratic questioning. Rewrote entire HTML with cleaner structure, better UX, accurate diagrams, and teaching-focused explanations at Basics/Engineering/Architecture layers.
+
+### **New Interaction**
 - **Hook Version**: 1.02
 - **Date**: 16-04-2026 14:27
 - **Prompt**: Generate a comprehensive code explorer HTML dashboard for a pygame project. The workspace contains:  1. **main.py**: A pygame simulation with a Square class that demonstrates:    - Game loop architecture with world initialization, updates, and rendering    - A Square class with position (x, y), velocity (moving_vector as Vector2), size, and birth_time/lifespan tracking    - Methods: larger_squares() to filter squares by size, distance_to_others() to find nearest threat, run_away() for steering behavior    - Physics: velocity in pixels/second, delta-time based movement, boundary bouncing    - Steering: squares detect larger neighbors and steer away with clamped acceleration    - Global settings: 1200x800 screen, 30 squares, 60 FPS    - Helper functions: create_squares(), update_world(), draw_world(), handle_events()  2. **example.py**: A minimal pygame template showing:    - Basic pygame initialization and window setup    - Manual event loop with QUIT handling    - Manual buffer management (clear, draw, flip)    - Framerate control via clock.tick(60)  Create an interactive HTML explorer that includes: - Architecture overview showing the game loop flow (events â†’ logic â†’ rendering) - Class diagram of Square and its methods - Steering behavior explanation with velocity/threat vectors - Performance notes on vector math and distance calculations - Code snippets highlighting key patterns (delta-time physics, steering, collision avoidance) - Links to specific methods and explanations of Pygame concepts  The output should be a single self-contained HTML file suitable for learning/teaching and ready to save as CODE_EXPLORER.html in the project root.
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 16-04-2026 15:13
+- **Prompt**: why is my draw text not working?
