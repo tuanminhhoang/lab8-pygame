@@ -262,3 +262,18 @@
 - **Hook Version**: 1.02
 - **Date**: 16-04-2026 15:13
 - **Prompt**: why is my draw text not working?
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 16-04-2026 15:17
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: why is my draw text not working?
+- **CoPilot Mode**: Edit
+- **CoPilot Model**: GPT-5.4 mini
+- **Socratic Mode**: ON
+- **Changes Made**: Fixed draw_text rendering by moving font creation after pygame.init(), passing the correct blit destination tuple, and drawing text after the world render so it is not cleared.
+- **Context and Reasons for Changes**: User asked why draw text was not working; the helper had an argument mismatch, incorrect blit usage, and rendering order that erased the text.
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 16-04-2026 15:18
+- **Prompt**: is there any problem in my main.py? tell me the problems only, not the solution
