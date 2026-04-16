@@ -292,3 +292,18 @@
 - **Hook Version**: 1.02
 - **Date**: 16-04-2026 15:25
 - **Prompt**: document my main.py and update readme.md
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 16-04-2026 15:28
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: document my main.py and update readme.md
+- **CoPilot Mode**: Edit
+- **CoPilot Model**: GPT-5.4 mini
+- **Socratic Mode**: ON
+- **Changes Made**: Expanded documentation in main.py with clearer module, class, and function docstrings plus type annotations; updated README.md to match the current window size, controls, behavior, and project files.
+- **Context and Reasons for Changes**: User requested source documentation and a refreshed README so the project description stays aligned with the current pygame implementation.
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 16-04-2026 15:30
+- **Prompt**: update the code explorer with the new main.py
