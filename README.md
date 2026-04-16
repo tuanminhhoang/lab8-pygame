@@ -1,7 +1,7 @@
 # Lab 8 - Pygame
 
-Small pygame simulation where multiple squares move, steer, and bounce inside
-an 800x600 window.
+Small pygame simulation where multiple squares move, steer, bounce, and
+respawn inside a 1200x800 window.
 
 ## Overview
 
@@ -11,17 +11,20 @@ The project focuses on core real-time programming concepts:
 - Delta-time-based motion (`dt`) for frame-rate independence
 - Basic steering behavior with vectors
 - Boundary collision handling
+- Simple lifetime-based respawning
 
 In the current logic, each square can try to turn away from the closest larger
-square while still bouncing on screen edges.
+square while still bouncing on screen edges. Squares are removed after their
+lifespan ends and respawned so the simulation stays populated.
 
 ## Project Structure
 
-- `main.py`: simulation model, update logic, rendering, and main loop
+- `main.py`: simulation model, update logic, rendering, text overlay, and main loop
 - `requirements.txt`: Python dependency list
 - `README.md`: project setup and behavior notes
 - `REPORT.md`: assignment/report notes
 - `JOURNAL.md`: chronological work log
+- `CODE_EXPLORER.html`: interactive learning dashboard for the project
 
 ## Requirements
 
@@ -56,17 +59,19 @@ python main.py
 
 ## Controls
 
-- Close the pygame window to exit.
+- Close the pygame window or press `Q` to exit.
 
 ## Behavior Summary
 
-- Creates `SQUARE_COUNT` squares with random size, position, and velocity.
-- Updates each square every frame.
-- Applies turn-limited steering away from nearest larger square.
+- Creates `SQUARE_COUNT` squares with random size, position, velocity, and lifespan.
+- Updates each square every frame using delta time.
+- Applies steering away from the nearest larger square.
 - Reflects velocity when a square hits a window boundary.
-- Draws all squares each frame.
+- Removes expired squares and respawns new ones to keep the count stable.
+- Draws all squares and a small text overlay each frame.
 
 ## Notes
 
 - This project is intentionally simple and learning-oriented.
 - Use it as a base for experimenting with movement, collision, and AI behavior.
+- The `CODE_EXPLORER.html` dashboard summarizes the architecture and major patterns in the code.

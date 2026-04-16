@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Code Explorer - lab8 - pygame</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pygame Steering Behavior Simulation - Code Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
 :root {
   --bg: #1e1e2e;
   --surface: #2a2a3e;
@@ -118,360 +118,418 @@ pre.snippet { background: #12121e; border-radius: 5px; padding: 0.7rem; font-siz
 <body>
 
 <header>
-  <h1>Code Explorer</h1>
-  <span class="file-badge">main.py | example.py | test.py</span>
-  <p style="margin-top:0.4rem;">Project: lab8 - pygame | Focus: runtime loop, steering behavior, and module dependencies</p>
+  <h1>Pygame Steering Behavior Simulation</h1>
+  <span class="file-badge">main.py + example.py</span>
+  <span class="file-badge">Code Explorer Dashboard</span>
+  <div class="meta">
+    Interactive learning guide for game loop architecture, steering behaviors, delta-time physics, respawning, and vector math.
+  </div>
 </header>
 
-<nav class="tab-nav">
-<button class="tab-btn active" onclick="switchTab('architecture', this)">Architecture</button>
-<button class="tab-btn" onclick="switchTab('patterns', this)">Patterns</button>
-<button class="tab-btn" onclick="switchTab('typehints', this)">Type Hints</button>
-<button class="tab-btn" onclick="switchTab('codereview', this)">Code Review</button>
-<button class="tab-btn" onclick="switchTab('performance', this)">Performance</button>
-<button class="tab-btn" onclick="switchTab('nextsteps', this)">Next Steps</button>
-</nav>
-
-<div id="tab-architecture" class="tab-panel active">
-  <div class="card">
-    <h3>Architecture Overview</h3>
-    <p>This project has one primary simulation module in <code>main.py</code>, one minimal loop sample in <code>example.py</code>, and one vector behavior snippet in <code>test.py</code>. The main loop follows init, event handling, update, draw, and display flip phases.</p>
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('architecture')">🏗️ Architecture</button>
+    <button class="tab-btn" onclick="switchTab('patterns')">✨ Patterns & Issues</button>
+    <button class="tab-btn" onclick="switchTab('typehints')">🔤 Type Hints</button>
+    <button class="tab-btn" onclick="switchTab('codereview')">📋 Code Review</button>
+    <button class="tab-btn" onclick="switchTab('performance')">🚀 Performance</button>
+    <button class="tab-btn" onclick="switchTab('nextsteps')">📚 Resources</button>
   </div>
 
-  <div class="card">
-    <h3>File and Module Map</h3>
+  <!-- ARCHITECTURE TAB -->
+  <div id="architecture" class="tab-panel active">
+    <div class="arch-subnav">
+      <button class="arch-btn active" onclick="switchArchPanel('gameloop')">Game Loop</button>
+      <button class="arch-btn" onclick="switchArchPanel('callgraph')">Call Graph</button>
+      <button class="arch-btn" onclick="switchArchPanel('sequence')">Sequence Flow</button>
+      <button class="arch-btn" onclick="switchArchPanel('dataflow')">Data Flow</button>
+      <button class="arch-btn" onclick="switchArchPanel('steering')">Steering Behavior</button>
+    </div>
+
+    <div id="gameloop" class="arch-panel active">
+      <div class="diag-title">Main Game Loop Architecture</div>
+      <div class="diag-container" id="diag-gameloop"></div>
+      <div class="diag-caption">The core loop runs at 60 FPS. Each frame: events → update world → draw → repeat.</div>
+    </div>
+
+    <div id="callgraph" class="arch-panel">
+      <div class="diag-title">Function Call Hierarchy</div>
+      <div class="diag-container" id="diag-callgraph"></div>
+      <div class="diag-caption"><code>run()</code> orchestrates: <code>handle_events()</code> → <code>update_world()</code> → <code>draw_world()</code> → text overlay.</div>
+    </div>
+
+    <div id="sequence" class="arch-panel">
+      <div class="diag-title">Per-Frame Sequence</div>
+      <div class="diag-container" id="diag-sequence"></div>
+      <div class="diag-caption">Clock measures dt, events processed, world updated, frame rendered and displayed.</div>
+    </div>
+
+    <div id="dataflow" class="arch-panel">
+      <div class="diag-title">Data Flow: moving_vector</div>
+      <div class="diag-container" id="diag-dataflow"></div>
+      <div class="diag-caption">Velocity created → modified by steering and borders → used for position integration.</div>
+    </div>
+
+    <div id="steering" class="arch-panel">
+      <div class="diag-title">Steering Behavior: Flee</div>
+      <div class="diag-container" id="diag-steering"></div>
+      <div class="diag-caption">Detect larger threats → compute flee vector → clamp speed → return safe velocity.</div>
+    </div>
+  </div>
+
+  <!-- PATTERNS TAB -->
+  <div id="patterns" class="tab-panel">
     <div class="two-col">
       <div>
-        <ul>
-          <li><strong>main.py</strong>: data model (<code>Square</code>), world update functions, rendering, and main game loop.</li>
-          <li><strong>example.py</strong>: simplified pygame boilerplate showing event queue and frame pacing.</li>
-          <li><strong>test.py</strong>: quick experiment with <code>pygame.Vector2</code> assignment behavior.</li>
-        </ul>
+        <h2 style="color: #00d4ff; margin-bottom: 15px;">✅ Good Patterns</h2>
+
+        <div class="pattern-card good">
+          <div class="pattern-title">Game Loop Modularity</div>
+          <div class="pattern-layers">
+            <div class="layer">
+              <div class="layer-title">Basics</div>
+              <div class="layer-content">Separate <code>handle_events()</code>, <code>update_world()</code>, <code>draw_world()</code>. Each function does one job.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Engineering Insight</div>
+              <div class="layer-content">This separation enables testability and independent refactoring of rendering vs. physics.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Architecture Insight</div>
+              <div class="layer-content">Professional game engines (Unity, Unreal, Godot) follow this event-update-render pattern as their core loop.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pattern-card good">
+          <div class="pattern-title">Delta-Time Physics</div>
+          <div class="pattern-layers">
+            <div class="layer">
+              <div class="layer-title">Basics</div>
+              <div class="layer-content"><code>position += velocity * dt</code> makes movement frame-rate independent.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Engineering Insight</div>
+              <div class="layer-content">Without delta-time, higher FPS → faster gameplay. With it, physics is predictable at any frame rate.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Architecture Insight</div>
+              <div class="layer-content">Essential for networked games (determinism) and debuggers (frame-by-frame stepping).</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pattern-card good">
+          <div class="pattern-title">Vector Math Abstraction</div>
+          <div class="pattern-layers">
+            <div class="layer">
+              <div class="layer-title">Basics</div>
+              <div class="layer-content">Use <code>Vector2</code> instead of manual x/y math. Built-in: <code>normalize()</code>, <code>distance_squared_to()</code>.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Engineering Insight</div>
+              <div class="layer-content">Reduces bugs; code reads like math instead of scalar soup.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Architecture Insight</div>
+              <div class="layer-content">Vector2 is implemented in C. Math operations are 10–100× faster than hand-rolled Python.</div>
+            </div>
+          </div>
+        </div>
       </div>
+
       <div>
-        <ul>
-          <li><strong>External dependency</strong>: <code>pygame</code> for vectors, window, events, and drawing.</li>
-          <li><strong>Stdlib usage</strong>: <code>random</code>, <code>dataclasses</code>, <code>typing</code>.</li>
-          <li><strong>Separation</strong>: simulation logic is mostly isolated from event handling and rendering.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+        <h2 style="color: #ffaa00; margin-bottom: 15px;">⚠️ Potential Issues</h2>
 
-  <div class="arch-subnav">
-    <button class="arch-btn active" onclick="switchArch('call', this)">Call Graph</button>
-    <button class="arch-btn" onclick="switchArch('deps', this)">Dependencies</button>
-    <button class="arch-btn" onclick="switchArch('fullseq', this)">Main Sequence</button>
-    <button class="arch-btn" onclick="switchArch('seqone', this)">Update Chain</button>
-    <button class="arch-btn" onclick="switchArch('seqtwo', this)">Steering Detail</button>
-    <button class="arch-btn" onclick="switchArch('dataone', this)">Data Squares</button>
-    <button class="arch-btn" onclick="switchArch('datatwo', this)">Data Velocity</button>
-    <button class="arch-btn" onclick="switchArch('datathree', this)">Data Delta Time</button>
-    <button class="arch-btn" onclick="switchArch('optone', this)">Control Flow</button>
-  </div>
-
-  <div id="arch-call" class="arch-panel active">
-    <div class="diag-title">Call Graph</div>
-    <div class="diag-container" id="diag-call_graph"></div>
-    <div class="diag-caption">This graph shows how the runtime loop calls world update and draw layers, then drills into per-square behavior.</div>
-  </div>
-
-  <div id="arch-deps" class="arch-panel">
-    <div class="diag-title">Dependency Graph</div>
-    <div class="diag-container" id="diag-dep_graph"></div>
-    <div class="diag-caption">The dependency map separates local modules from external libraries and points to docs for quick study.</div>
-  </div>
-
-  <div id="arch-fullseq" class="arch-panel">
-    <div class="diag-title">Full Runtime Sequence</div>
-    <div class="diag-container" id="diag-seq_full"></div>
-    <div class="diag-caption">One frame cycle repeats this sequence until a quit event stops the loop.</div>
-  </div>
-
-  <div id="arch-seqone" class="arch-panel">
-    <div class="diag-title">Update Chain Sequence</div>
-    <div class="diag-container" id="diag-seq_update"></div>
-    <div class="diag-caption">Each square update executes steering, integration, boundary checks, and center recomputation in fixed order.</div>
-  </div>
-
-  <div id="arch-seqtwo" class="arch-panel">
-    <div class="diag-title">Steering Detail Sequence</div>
-    <div class="diag-container" id="diag-seq_steer"></div>
-    <div class="diag-caption">Threat selection and flee vector logic define how one square reacts to larger nearby squares.</div>
-  </div>
-
-  <div id="arch-dataone" class="arch-panel">
-    <div class="diag-title">Data Flow: Squares List</div>
-    <div class="diag-container" id="diag-data_squares"></div>
-    <div class="diag-caption">The shared squares collection is created once, then read and mutated each frame.</div>
-  </div>
-
-  <div id="arch-datatwo" class="arch-panel">
-    <div class="diag-title">Data Flow: Moving Vector</div>
-    <div class="diag-container" id="diag-data_velocity"></div>
-    <div class="diag-caption">Velocity is mutated by steering and border logic before becoming the source of position updates.</div>
-  </div>
-
-  <div id="arch-datathree" class="arch-panel">
-    <div class="diag-title">Data Flow: Delta Time</div>
-    <div class="diag-container" id="diag-data_dt"></div>
-    <div class="diag-caption">Delta time starts at the frame clock and scales movement and steering each iteration.</div>
-  </div>
-
-  <div id="arch-optone" class="arch-panel">
-    <div class="diag-title">Optional Control Trace</div>
-    <div class="diag-container" id="diag-control_loop"></div>
-    <div class="diag-caption">This optional trace highlights the frame loop branches for continue vs quit behavior.</div>
-  </div>
-</div>
-
-<div id="tab-patterns" class="tab-panel">
-  <div class="two-col">
-    <div>
-      <div class="section-head green">Good Patterns</div>
-
-      <div class="pattern-card">
-        <div class="pattern-header"><span class="pattern-icon">✅</span><span class="pattern-title">Clear Function Roles</span></div>
-        <div class="pattern-desc"><code>handle_events</code>, <code>update_world</code>, and <code>draw_world</code> split responsibilities in a readable loop.</div>
-        <div class="pattern-layers">
-          <div class="layer layer-basics"><span class="layer-label">Basics:</span>Each function does one job that beginners can reason about.</div>
-          <div class="layer layer-eng"><span class="layer-label">Engineering Insight:</span>This separation lowers bug surface when changing rendering or simulation independently.</div>
-          <div class="layer layer-arch"><span class="layer-label">Architecture Insight:</span>The code follows a lightweight game architecture with explicit frame stages.</div>
+        <div class="pattern-card issue">
+          <div class="pattern-title">Border Recovery Has Directional Bias</div>
+          <div class="pattern-layers">
+            <div class="layer">
+              <div class="layer-title">Basics</div>
+              <div class="layer-content"><code>free_from_border()</code> adds or subtracts fixed velocity near edges, which can bias motion over time.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Engineering Insight</div>
+              <div class="layer-content">The edge correction is not symmetric in effect and can push squares into repeated right/down recovery behavior.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Architecture Insight</div>
+              <div class="layer-content">Border recovery and steering are coupled through direct velocity mutation, so the motion model is harder to tune independently.</div>
+            </div>
+          </div>
         </div>
-        <a class="ext-link" href="https://refactoring.guru/smells/large-class" target="_blank" rel="noopener noreferrer">Related reading: Separation of concerns</a>
-      </div>
 
-      <div class="pattern-card">
-        <div class="pattern-header"><span class="pattern-icon">✅</span><span class="pattern-title">Named Constants</span></div>
-        <div class="pattern-desc">Window size, FPS, colors, and count are constants, reducing hidden literals in logic paths.</div>
-        <div class="pattern-layers">
-          <div class="layer layer-basics"><span class="layer-label">Basics:</span>Constants make intent obvious and tuning easier.</div>
-          <div class="layer layer-eng"><span class="layer-label">Engineering Insight:</span>Centralized values reduce inconsistent edits across multiple functions.</div>
-          <div class="layer layer-arch"><span class="layer-label">Architecture Insight:</span>Configuration is separated from runtime behavior.</div>
+        <div class="pattern-card issue">
+          <div class="pattern-title">Missing Return Type on Threat Lookup</div>
+          <div class="pattern-layers">
+            <div class="layer">
+              <div class="layer-title">Basics</div>
+              <div class="layer-content"><code>distance_to_others()</code> returns a square, but its signature does not state that explicitly.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Engineering Insight</div>
+              <div class="layer-content">The type hints are mostly strong, but this one missing return annotation still weakens static checking and autocomplete.</div>
+            </div>
+            <div class="layer">
+              <div class="layer-title">Architecture Insight</div>
+              <div class="layer-content">Small annotation gaps matter more in helper-heavy code because they make the object flow less explicit.</div>
+            </div>
+          </div>
         </div>
-        <a class="ext-link" href="https://docs.python.org/3/tutorial/modules.html" target="_blank" rel="noopener noreferrer">Related reading: Python modules and constants</a>
       </div>
+    </div>
+  </div>
 
-      <div class="pattern-card">
-        <div class="pattern-header"><span class="pattern-icon">✅</span><span class="pattern-title">Vector Based Motion</span></div>
-        <div class="pattern-desc">Using <code>Vector2</code> for direction and speed is more robust than manual scalar math for steering.</div>
-        <div class="pattern-layers">
-          <div class="layer layer-basics"><span class="layer-label">Basics:</span>Vectors model movement naturally as one object.</div>
-          <div class="layer layer-eng"><span class="layer-label">Engineering Insight:</span>Built-in vector operations avoid repeated handwritten math utilities.</div>
-          <div class="layer layer-arch"><span class="layer-label">Architecture Insight:</span>Math layer becomes reusable if new entity types are introduced later.</div>
+  <!-- TYPE HINTS TAB -->
+  <div id="typehints" class="tab-panel">
+    <div class="type-banner">
+      <div class="type-score">4 / 5</div>
+      <div>Type hint coverage is strong. Most functions and helpers are annotated, but one return type is still missing.</div>
+      <div class="type-verdict">Status: Strong foundation, one visible gap</div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="color: #00d4ff; margin-bottom: 15px;">✅ Strengths</h3>
+        <div class="pattern-card">
+          <div class="pattern-title">Function Parameters Annotated</div>
+          <p style="color: #ddd; margin-top: 10px;">Key functions like <code>update_world(squares: List[Square], bounds: Tuple[int, int], dt: float)</code> clearly declare parameter types.</p>
+          <div class="code-snippet">def update_world(squares: List[Square], bounds: Tuple[int, int], dt: float) -> None:</div>
         </div>
-        <a class="ext-link" href="https://www.pygame.org/docs/ref/math.html" target="_blank" rel="noopener noreferrer">Related reading: pygame.math.Vector2</a>
-      </div>
-    </div>
 
-    <div>
-      <div class="section-head yellow">Potential Issues</div>
-
-      <div class="pattern-card">
-        <div class="pattern-header"><span class="pattern-icon">⚠️</span><span class="pattern-title">Speed Bias Near Borders</span></div>
-        <div class="pattern-desc"><code>free_from_border</code> always adds positive <code>100</code>, which can push velocity to positive axes over time.</div>
-        <div class="pattern-layers">
-          <div class="layer layer-basics"><span class="layer-label">Basics:</span>Objects can drift toward right and bottom edges instead of balancing direction.</div>
-          <div class="layer layer-eng"><span class="layer-label">Engineering Insight:</span>Directional bias creates non-physical behavior and unstable long runs.</div>
-          <div class="layer layer-arch"><span class="layer-label">Architecture Insight:</span>Border recovery should preserve sign or project inward normal instead of fixed add.</div>
+        <div class="pattern-card">
+          <div class="pattern-title">Vector2 Type Used Consistently</div>
+          <p style="color: #ddd; margin-top: 10px;"><code>moving_vector</code> and <code>center</code> are declared as <code>Vector2</code>, enabling IDE autocompletion.</p>
+          <div class="code-snippet">self.moving_vector = Vector2(vx, vy)</div>
         </div>
-        <div class="fix-hint">Hint: scale correction by wall normal and keep component sign consistent with bounce intent.</div>
       </div>
 
-      <div class="pattern-card">
-        <div class="pattern-header"><span class="pattern-icon">⚠️</span><span class="pattern-title">Quadratic Threat Search</span></div>
-        <div class="pattern-desc">Every square scans all others each frame, yielding O(n^2) behavior as entity count grows.</div>
-        <div class="pattern-layers">
-          <div class="layer layer-basics"><span class="layer-label">Basics:</span>More squares means performance cost rises quickly.</div>
-          <div class="layer layer-eng"><span class="layer-label">Engineering Insight:</span>Distance checks dominate frame budget at larger counts.</div>
-          <div class="layer layer-arch"><span class="layer-label">Architecture Insight:</span>Spatial partitioning can isolate nearby candidates and reduce unnecessary checks.</div>
+      <div>
+        <h3 style="color: #ffaa00; margin-bottom: 15px;">⚠️ Gaps</h3>
+        <div class="pattern-card">
+          <div class="pattern-title">Return Types Incomplete</div>
+          <p style="color: #ddd; margin-top: 10px;"><code>distance_to_others()</code> does not declare its return type, so readers still need to infer the object it returns.</p>
+          <div class="code-snippet">def distance_to_others(self, others: List[Square]):
+    # Should be: -> Square:</div>
         </div>
-        <div class="fix-hint">Hint: introduce a grid or quadtree and only compare local neighbors.</div>
+
+        <div class="pattern-card">
+          <div class="pattern-title">Module Constants Untyped</div>
+          <p style="color: #ddd; margin-top: 10px;">Global constants <code>SCREEN_WIDTH = 1200</code> still lack annotations. Use <code>SCREEN_WIDTH: int = 1200</code>.</p>
+          <div class="code-snippet">SCREEN_WIDTH: int = 1200
+FPS: int = 60</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div id="tab-typehints" class="tab-panel">
-  <div class="type-banner">
-    <div class="score-big">4/5</div>
-    <div class="score-verdict">Strong use of annotations in function signatures, with one major gap in class field declarations and dataclass usage consistency.</div>
-  </div>
+  <!-- CODE REVIEW TAB -->
+  <div id="codereview" class="tab-panel">
+    <div class="review-layout">
+      <div>
+        <h3 style="color: #00d4ff; margin-bottom: 15px;">Review Items</h3>
+        <div class="review-item selected" onclick="selectReview(0)">
+          <div class="review-title">Border Recovery Bias</div>
+          <div class="review-snippet">free_from_border(square, bounds)
+# adds +100 / -100 near walls</div>
+          <span class="severity medium">MEDIUM</span>
+        </div>
+        <div class="review-item" onclick="selectReview(1)">
+          <div class="review-title">Missing Return Type Annotation</div>
+          <div class="review-snippet">def distance_to_others(self, others):
+    # returns Square, not annotated</div>
+          <span class="severity low">LOW</span>
+        </div>
+        <div class="review-item" onclick="selectReview(2)">
+          <div class="review-title">Magic Numbers in Steering</div>
+          <div class="review-snippet">avoid_speed = 200
+max_speed = 100</div>
+          <span class="severity medium">MEDIUM</span>
+        </div>
+        <div class="review-item" onclick="selectReview(3)">
+          <div class="review-title">Untyped Module Constants</div>
+          <div class="review-snippet">SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800</div>
+          <span class="severity low">LOW</span>
+        </div>
+        <div class="review-item" onclick="selectReview(4)">
+          <div class="review-title">O(n²) Threat Detection</div>
+          <div class="review-snippet">for square in squares:
+    larger = self.larger_squares(others)
+    # scales quadratically</div>
+          <span class="severity medium">MEDIUM</span>
+        </div>
+      </div>
 
-  <div class="two-col">
-    <div class="card">
-      <div class="section-head green">Strengths</div>
-      <ul>
-        <li>Most functions in <code>main.py</code> annotate parameters and return types.</li>
-        <li>Container annotations like <code>List[Square]</code> and tuple bounds are explicit.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="section-head red">Gaps</div>
-      <ul>
-        <li><code>Square</code> is marked as <code>@dataclass</code> but defines a manual <code>__init__</code>, reducing dataclass benefits and field clarity.</li>
-        <li><code>larger_squares</code> and <code>distance_to_others</code> do not specify return annotations.</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div id="tab-codereview" class="tab-panel">
-  <div class="review-layout">
-    <div class="review-left">
-      <div class="review-item" id="ri-0" onclick="selectReview(0)">
-        <div class="ri-titlerow"><span class="ri-title">Border Correction Adds Positive Speed</span><span class="badge badge-high">high</span></div>
-        <div class="ri-note">Correctness risk: movement drifts to positive direction.</div>
-      </div>
-      <div class="review-item" id="ri-1" onclick="selectReview(1)">
-        <div class="ri-titlerow"><span class="ri-title">Dataclass Usage Is Inconsistent</span><span class="badge badge-medium">medium</span></div>
-        <div class="ri-note">Maintainability: class metadata and constructor conflict.</div>
-      </div>
-      <div class="review-item" id="ri-2" onclick="selectReview(2)">
-        <div class="ri-titlerow"><span class="ri-title">Unused dt Parameter</span><span class="badge badge-low">low</span></div>
-        <div class="ri-note">Readability: parameter suggests behavior that is not present.</div>
-      </div>
-      <div class="review-item" id="ri-3" onclick="selectReview(3)">
-        <div class="ri-titlerow"><span class="ri-title">Quadratic Neighbor Scan</span><span class="badge badge-medium">medium</span></div>
-        <div class="ri-note">Performance: O(n^2) checks inside update loop.</div>
-      </div>
-      <div class="review-item" id="ri-4" onclick="selectReview(4)">
-        <div class="ri-titlerow"><span class="ri-title">Very Thin Test Coverage</span><span class="badge badge-medium">medium</span></div>
-        <div class="ri-note">Type safety and regressions are not validated automatically.</div>
+      <div id="review-detail-panel">
+        <h3>Border Recovery Bias</h3>
+        <div id="review-detail-content"></div>
       </div>
     </div>
-    <div class="review-right" id="review-detail-panel"></div>
   </div>
-</div>
 
-<div id="tab-performance" class="tab-panel">
-  <div class="two-col">
-    <div>
-      <div class="section-head green">Wins</div>
-      <div class="perf-card">
-        <div class="perf-title">Frame Rate Is Explicitly Capped</div>
-        <div class="perf-desc">Using <code>clock.tick(FPS)</code> controls update cadence and avoids runaway loops.</div>
-      </div>
-      <div class="perf-card">
-        <div class="perf-title">Distance Uses Squared Metric</div>
-        <div class="perf-desc">Threat selection uses <code>distance_squared_to</code>, avoiding square root overhead for ranking.</div>
-      </div>
+  <!-- PERFORMANCE TAB -->
+  <div id="performance" class="tab-panel">
+    <div class="badge-score">
+      <div class="badge-number">4 / 6</div>
+      <div class="badge-verdict">Mostly efficient. No major bottlenecks at 30 squares, but the nearest-neighbor scan still scales quadratically.</div>
     </div>
 
-    <div>
-      <div class="section-head red">Risks</div>
-      <div class="perf-card">
-        <div class="perf-title">Nested Scan Per Entity</div>
-        <div class="perf-desc">Each square computes larger-square candidates against all squares each frame, producing O(n^2) cost.</div>
+    <div class="two-col">
+      <div>
+        <h3 style="color: #00d4ff; margin-bottom: 15px;">🚀 Performance Wins</h3>
+        <div class="pattern-card">
+          <div class="pattern-title">Squared Distance Optimization</div>
+          <p style="color: #ddd; margin-top: 10px;"><code>distance_squared_to()</code> avoids sqrt when ranking. Saves work when picking the nearest larger square each frame.</p>
+        </div>
+        <div class="pattern-card">
+          <div class="pattern-title">Vector2 Native Implementation</div>
+          <p style="color: #ddd; margin-top: 10px;">Pygame's Vector2 is C-based. Math is 10–100× faster than hand-rolled Python.</p>
+        </div>
       </div>
-      <div class="perf-card">
-        <div class="perf-title">Avoid Vector Normalization Path</div>
-        <div class="perf-desc">Calling <code>normalize()</code> before zero-length guard can raise if vectors overlap exactly.</div>
-      </div>
-    </div>
-  </div>
-  <div style="margin-top:1rem;"><span class="badge-score">Performance Score: 4 / 6</span> <span style="color:var(--muted); margin-left:0.6rem;">Top finding: neighbor search cost scales quadratically with entity count.</span></div>
-</div>
 
-<div id="tab-nextsteps" class="tab-panel">
-  <div class="ns-item">
-    <div class="ns-num">1</div>
-    <div class="ns-text">
-      <a href="https://www.pygame.org/docs/ref/math.html" target="_blank" rel="noopener noreferrer">Deepen Vector Math Practice</a>
-      <div class="ns-desc">Review vector normalization, projection, and scaling to stabilize border and steering logic.</div>
+      <div>
+        <h3 style="color: #ffaa00; margin-bottom: 15px;">🐢 Performance Risks</h3>
+        <div class="pattern-card">
+          <div class="pattern-title">Quadratic Threat Detection</div>
+          <p style="color: #ddd; margin-top: 10px;">Every square iterates all squares: O(n²). At 30 squares, manageable. At larger counts, it becomes the bottleneck.</p>
+        </div>
+        <div class="pattern-card">
+          <div class="pattern-title">List Rebuilding Each Frame</div>
+          <p style="color: #ddd; margin-top: 10px;"><code>larger_squares()</code> and <code>distance_to_others()</code> still rebuild temporary lists every frame.</p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="ns-item">
-    <div class="ns-num">2</div>
-    <div class="ns-text">
-      <a href="https://docs.python.org/3/library/dataclasses.html" target="_blank" rel="noopener noreferrer">Refactor Data Model with Dataclasses</a>
-      <div class="ns-desc">Either use generated dataclass fields fully or remove the decorator to keep intent consistent.</div>
+
+  <!-- NEXT STEPS TAB -->
+  <div id="nextsteps" class="tab-panel">
+    <h2 style="color: #00d4ff; margin-bottom: 20px;">📚 Learning Resources & Next Steps</h2>
+
+    <div class="ns-item">
+      <div class="ns-title">Delta-Time Physics</div>
+      <p style="color: #ddd; margin-bottom: 10px;">Your code correctly multiplies velocity by dt. Master this to understand Euler integration and physics engines.</p>
+      <a href="https://docs.python.org/3/library/time.html" class="ns-link">Python time module</a>
+      <a href="https://en.wikipedia.org/wiki/Delta_time" class="ns-link">Delta-time concept</a>
     </div>
-  </div>
-  <div class="ns-item">
-    <div class="ns-num">3</div>
-    <div class="ns-text">
-      <a href="https://docs.python.org/3/library/unittest.html" target="_blank" rel="noopener noreferrer">Add Unit Tests for Core Functions</a>
-      <div class="ns-desc">Start with deterministic tests for bounds checks, speed clamping, and threat selection edge cases.</div>
+
+    <div class="ns-item">
+      <div class="ns-title">Steering Behaviors</div>
+      <p style="color: #ddd; margin-bottom: 10px;">Your "flee" is Step 1. Learn Craig Reynolds' behaviors: seek, arrive, pursuit, cohesion, separation, alignment.</p>
+      <a href="https://www.red3d.com/cwr/steer/" class="ns-link">Craig Reynolds' Steering</a>
+      <a href="https://en.wikipedia.org/wiki/Boid" class="ns-link">Boids algorithm</a>
     </div>
-  </div>
-  <div class="ns-item">
-    <div class="ns-num">4</div>
-    <div class="ns-text">
-      <a href="https://en.wikipedia.org/wiki/Quadtree" target="_blank" rel="noopener noreferrer">Explore Spatial Partitioning</a>
-      <div class="ns-desc">A grid or quadtree can reduce pairwise checks once square count increases.</div>
+
+    <div class="ns-item">
+      <div class="ns-title">Pygame Vector Math</div>
+      <p style="color: #ddd; margin-bottom: 10px;">Deepen knowledge: dot product (angles), cross product (rotation), lerp (smooth transitions).</p>
+      <a href="https://www.pygame.org/docs/ref/math.html" class="ns-link">Pygame math module</a>
+      <a href="https://en.wikipedia.org/wiki/Dot_product" class="ns-link">Dot product explained</a>
     </div>
-  </div>
-  <div class="ns-item">
-    <div class="ns-num">5</div>
-    <div class="ns-text">
-      <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility" target="_blank" rel="noopener noreferrer">Improve Dashboard Accessibility</a>
-      <div class="ns-desc">Add keyboard arrow support for sub-tabs and stronger contrast variants for teaching presentations.</div>
+
+    <div class="ns-item">
+      <div class="ns-title">Spatial Partitioning</div>
+      <p style="color: #ddd; margin-bottom: 10px;">Scale to thousands of agents with quadtrees and grid-based partitioning.</p>
+      <a href="https://en.wikipedia.org/wiki/Quadtree" class="ns-link">Quadtree data structure</a>
+      <a href="https://www.refactoring.guru/design-patterns" class="ns-link">Design patterns</a>
     </div>
+
+    <div class="ns-item">
+      <div class="ns-title">Pygame Official Docs</div>
+      <p style="color: #ddd; margin-bottom: 10px;">Master pygame.time.Clock, pygame.event, pygame.display for solid game loop implementations.</p>
+      <a href="https://www.pygame.org/docs/" class="ns-link">Pygame official docs</a>
+      <a href="https://www.pygame.org/docs/ref/time.html" class="ns-link">Clock and timing</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3 style="color: #6cc8ff; margin-top: 30px; margin-bottom: 15px;">Suggested Exercises</h3>
+    <ul style="color: #ddd; margin-left: 20px; line-height: 2;">
+      <li>Add separation (push away crowded neighbors) and cohesion (move toward center of mass).</li>
+      <li>Implement a grid-based spatial partition to replace O(n²) threat detection.</li>
+      <li>Add a "predator" square that chases smaller squares (seek behavior).</li>
+      <li>Visualize velocity vectors and threat vectors to debug steering.</li>
+      <li>Profile with cProfile to identify actual hotspots (likely threat detection).</li>
+    </ul>
   </div>
 </div>
 
 <script>
-function switchTab(name, btn) {
+function switchTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  btn.classList.add('active');
+  document.getElementById(name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'architecture') {
+    renderAllDiagrams();
+  }
 }
 
-function switchArch(name, btn) {
+function switchArchPanel(panelName) {
   document.querySelectorAll('.arch-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.arch-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('arch-' + name).classList.add('active');
-  btn.classList.add('active');
+  document.getElementById(panelName).classList.add('active');
+  event.target.classList.add('active');
+  renderDiagram(panelName);
 }
 
 const reviewItems = [
   {
     id: 0,
-    title: 'Border Correction Adds Positive Speed',
+    title: 'List Mutation in Iteration',
     severity: 'high',
-    snippet: `def free_from_border(square: Square, bounds: Tuple[int, int]):\n    if square.x <= 1 or square.x >= bounds[0] - square.size - 1:\n        if abs(square.moving_vector.x) < 30:\n            square.moving_vector.x += 100`,
-    shortNote: 'Border helper can inject a persistent rightward or downward bias.',
-    fullExplanation: 'The function adds +100 regardless of current direction whenever a component magnitude is small near a wall.\nOver many collisions this can bias movement toward positive axes and produce the user-observed border clustering behavior.',
-    improvementHint: 'Adjust by inward normal and preserve intended sign after bounce to avoid directional drift.'
+    snippet: `for square in squares:\n    if expired(square):\n        squares.remove(square)`,
+    shortNote: 'Modifying a list while iterating causes iterator invalidation and skips elements.',
+    fullExplanation: `When you call remove() during iteration, Python's list iterator becomes invalid. 
+The internal index advances but the list structure changes, causing the iterator to skip elements. 
+Example: iterating [A, B, C], remove B at index 1 → list becomes [A, C] → iterator jumps over C.`,
+    improvementHint: `Use list comprehension to build a new list:
+    squares = [s for s in squares if time.time() - s.birth_time < s.lifespan]`
   },
   {
     id: 1,
-    title: 'Dataclass Usage Is Inconsistent',
+    title: 'Missing Return Type Annotation',
     severity: 'medium',
-    snippet: `@dataclass\nclass Square:\n    def __init__(self, x: float, y: float, vx: float, vy: float, size: int):\n        self.x = x`,
-    shortNote: 'Dataclass decorator is present but generated field benefits are mostly bypassed.',
-    fullExplanation: 'A manual constructor is allowed, but it limits automatic dataclass advantages like generated init clarity and easy repr consistency.\nFor teaching projects, either fully embrace dataclass fields or remove the decorator for cleaner semantics.',
-    improvementHint: 'Define typed fields on the class and use __post_init__ for derived center initialization.'
+    snippet: `def distance_to_others(self, others: List[Square]):\n    # Should specify return type`,
+    shortNote: 'Return types help IDEs and enable static type checking.',
+    fullExplanation: `distance_to_others() returns a Square object but lacks return annotation.
+IDEs can't autocomplete methods on the result; callers must guess the return type.
+Return type annotations: 1) enable IDE autocompletion, 2) serve as documentation, 3) allow type checkers to catch bugs.`,
+    improvementHint: `Add the return type:
+    def distance_to_others(self, others: List[Square]) -> Square:`
   },
   {
     id: 2,
-    title: 'Unused dt Parameter',
-    severity: 'low',
-    snippet: `def check_for_bounds(square: Square, bounds: Tuple[int, int], dt: float):\n    if square.x < 0:\n        square.x = 0`,
-    shortNote: 'Function signature includes dt but logic does not use it.',
-    fullExplanation: 'An unused parameter can mislead readers into assuming frame-time-dependent border behavior exists.\nRemoving or using dt improves readability and helps static checks catch true dead parameters.',
-    improvementHint: 'Drop dt from signature or incorporate it in predictive collision handling.'
+    title: 'Magic Numbers in Steering Code',
+    severity: 'medium',
+    snippet: `avoid_speed = 200  # pixels/sec²\nmax_speed = 100     # pixels/sec`,
+    shortNote: 'Tuning parameters should be named constants or class attributes.',
+    fullExplanation: `Game balance is buried in method logic. Designers can't tweak behavior without understanding code.
+Professional games use data-driven design: store parameters in JSON/YAML or as class attributes.
+This makes behavior visible and tunable without touching algorithm code.`,
+    improvementHint: `Move to class constants:
+    class Square:\n        MAX_SPEED = 100.0\n        AVOID_SPEED = 200.0`
   },
   {
     id: 3,
-    title: 'Quadratic Neighbor Scan',
-    severity: 'medium',
-    snippet: `def distance_to_others(self, others: List[Square]):\n    larger = self.larger_squares(others)\n    for square in larger:\n        distance = self.center.distance_squared_to(square.center)`,
-    shortNote: 'Per-entity full scan creates O(n^2) work each frame.',
-    fullExplanation: 'With 30 squares this is manageable, but scaling up quickly increases frame time.\nSpatial partitioning or batched nearest-neighbor heuristics can reduce unnecessary comparisons.',
-    improvementHint: 'Use a uniform grid and evaluate only nearby cells for larger candidates.'
+    title: 'Untyped Module Constants',
+    severity: 'low',
+    snippet: `SCREEN_WIDTH = 1200\nSCREEN_HEIGHT = 800\nFPS = 60`,
+    shortNote: 'Global constants benefit from explicit type annotations.',
+    fullExplanation: `Python 3.6+ supports PEP 526 variable annotations. Even constants should be typed.
+This documents intent (integer, not string), catches typos during type checking, and helps IDE autocomplete.`,
+    improvementHint: `Add type annotations:\n    SCREEN_WIDTH: int = 1200\n    FPS: int = 60`
   },
   {
     id: 4,
-    title: 'Very Thin Test Coverage',
+    title: 'O(n²) Threat Detection',
     severity: 'medium',
-    snippet: `import pygame\nv = pygame.Vector2()\nv.xy = 1, 2\nprint(v.xy)`,
-    shortNote: 'Current tests do not assert simulation behavior or edge cases.',
-    fullExplanation: 'The existing test file demonstrates vector syntax but does not validate update invariants, bounce behavior, or steering correctness.\nWithout assertions, regressions in movement logic are hard to catch early.',
-    improvementHint: 'Create deterministic unit tests for check_for_bounds and run_away using fixed vectors and seeded random inputs.'
+    snippet: `for square in squares:\n    larger = self.larger_squares(others)\n    for square in larger:\n        distance = self.center.distance_squared_to(...)`,
+    shortNote: 'Every square iterates all squares—quadratic complexity.',
+    fullExplanation: `At 30 squares × 60 FPS, manageable (~54K comparisons/sec).
+At 1000 squares, becomes 60M comparisons/sec—time for optimization.
+Use spatial partitioning (quadtree, grid) to reduce pairwise checks.`,
+    improvementHint: `Implement a grid-based spatial partition:\n    grid[cell_x][cell_y] = [squares]\n    Query only adjacent cells for threats.`
   }
 ];
 
@@ -481,149 +539,109 @@ function escH(s) {
 
 function selectReview(id) {
   document.querySelectorAll('.review-item').forEach(el => el.classList.remove('selected'));
-  document.getElementById('ri-' + id).classList.add('selected');
+  const items = Array.from(document.querySelectorAll('.review-item'));
+  if (items[id]) items[id].classList.add('selected');
   const item = reviewItems[id];
-  const sevClass = 'badge-' + item.severity;
-  const body = item.fullExplanation.replace(/\n/g, '<br>');
-  document.getElementById('review-detail-panel').innerHTML = `
-    <div>
-      <div class="detail-head">
-        <span class="detail-title">${escH(item.title)}</span>
-        <span class="badge ${escH(sevClass)}">${escH(item.severity)}</span>
-      </div>
-      <div class="detail-body">${body}</div>
-      <pre class="snippet">${escH(item.snippet)}</pre>
-      <div class="hint-box">&#128161; <strong>Improvement:</strong> ${escH(item.improvementHint)}</div>
-    </div>`;
+  const sevClass = 'severity ' + item.severity;
+  const detail = document.getElementById('review-detail-panel');
+  detail.innerHTML = `
+    <h3>${escH(item.title)}</h3>
+    <p style="color: #aaa; margin-bottom: 15px;">${escH(item.shortNote)}</p>
+    <div style="margin-bottom: 20px;">
+      <div style="color: #6cc8ff; font-weight: bold; margin-bottom: 8px;">Context:</div>
+      <div class="code-snippet">${escH(item.snippet)}</div>
+    </div>
+    <div style="margin-bottom: 20px;">
+      <div style="color: #6cc8ff; font-weight: bold; margin-bottom: 8px;">Explanation:</div>
+      <div style="color: #ddd;">${escH(item.fullExplanation)}</div>
+    </div>
+    <div style="margin-bottom: 20px;">
+      <div style="color: #6cc8ff; font-weight: bold; margin-bottom: 8px;">Improvement:</div>
+      <div class="code-snippet">${escH(item.improvementHint)}</div>
+    </div>
+    <span class="${sevClass}">${item.severity.toUpperCase()}</span>
+  `;
 }
 
 mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
 
 const diagrams = {
-  call_graph: String.raw`graph TD
-n1[run entry] --> n2[create squares]
-n1 --> n3[handle events]
-n1 --> n4[update world]
-n1 --> n5[draw world]
-n4 --> n6[update square]
-n6 --> n7[run away]
-n7 --> n8[nearest threat]
-n8 --> n9[larger filter]
-n6 --> n10[bounds check]
-n6 --> n11[border release]
-n6 --> n12[center update]`,
-
-  dep_graph: String.raw`graph LR
-n1[main module] --> n4[python random]
-n1 --> n5[pygame package]
-n1 --> n6[dataclass helper]
-n1 --> n7[typing hints]
-n2[example loop] --> n5
-n3[test vector demo] --> n5
-click n5 href "https://www.pygame.org/docs/" "Open docs"
-click n4 href "https://docs.python.org/3/library/random.html" "Open docs"
-click n6 href "https://docs.python.org/3/library/dataclasses.html" "Open docs"
-click n7 href "https://docs.python.org/3/library/typing.html" "Open docs"`,
-
-  seq_full: String.raw`sequenceDiagram
-participant p1 as Run
-participant p2 as Events
-participant p3 as Update
-participant p4 as Draw
-participant p5 as Display
-p1->>p2: poll quit events
-p2-->>p1: continue flag
-p1->>p3: pass squares dt
-p3-->>p1: world updated
-p1->>p4: draw all squares
-p4->>p5: flip frame buffer
-p5-->>p1: next frame ready`,
-
-  seq_update: String.raw`sequenceDiagram
-participant p1 as World
-participant p2 as Square
-participant p3 as Bounds
-participant p4 as Center
-p1->>p2: update one square
-p2->>p2: steer velocity
-p2->>p2: integrate position
-p2->>p3: apply wall clamp
-p3-->>p2: reflect velocity
-p2->>p4: recompute center
-p4-->>p1: update done`,
-
-  seq_steer: String.raw`sequenceDiagram
-participant p1 as Square
-participant p2 as Threats
-participant p3 as Vector
-p1->>p2: find larger list
-p2-->>p1: nearest target
-p1->>p3: build flee vector
-p3-->>p1: normalized dir
-p1->>p3: apply avoid accel
-p3-->>p1: capped velocity`,
-
-  data_squares: String.raw`graph TD
-n1[create list values] --> n2[store world list]
-n2 --> n3[iterate each frame]
-n3 --> n4[pass to updates]
-n4 --> n5[mutate members]
-n5 --> n6[draw frame output]`,
-
-  data_velocity: String.raw`graph TD
-n1[init speed values] --> n2[square vector state]
-n2 --> n3[run away adjust]
-n3 --> n4[bounds reflection]
-n4 --> n5[border release]
-n5 --> n6[position integration]`,
-
-  data_dt: String.raw`graph TD
-n1[clock tick ms] --> n2[convert to seconds]
-n2 --> n3[update world step]
-n3 --> n4[scale movement]
-n3 --> n5[scale avoid accel]
-n4 --> n6[new position state]`,
-
-  control_loop: String.raw`graph TD
-n1[start runtime] --> n2[read frame dt]
-n2 --> n3[process events]
-n3 --> n4{keep running}
-n4 -->|yes| n5[update and draw]
-n5 --> n2
-n4 -->|no| n6[quit pygame]`
+  gameloop: String.raw`graph TD
+    n1["Start Frame"] --> n2["Get dt"]
+    n2 --> n3["Handle Events"]
+    n3 --> n6{"Running?"}
+    n6 -->|No| n7["End"]
+    n6 -->|Yes| n4["Update World"]
+    n4 --> n5["Draw World"]
+    n5 --> n1`,
+  
+  callgraph: String.raw`graph TD
+    n1["run()"] --> n2["create_squares"]
+    n1 --> n3["handle_events()"]
+    n1 --> n4["update_world()"]
+    n1 --> n5["draw_world()"]
+    n1 --> n10["draw_text()"]
+    n4 --> n6["death()"]
+    n4 --> n7["reborn()"]
+    n4 --> n8["update_square()"]
+    n8 --> n9["run_away()"]`,
+  
+  sequence: String.raw`sequenceDiagram
+    participant Clock
+    participant Events
+    participant Physics
+    participant Render
+    Clock->>Events: tick(dt)
+    Events->>Physics: handle_events()
+    Physics->>Physics: update_world()
+    Physics->>Render: draw_world()
+    Render->>Render: pygame.display.flip()
+    Render->>Clock: next frame`,
+  
+  dataflow: String.raw`graph TD
+    n1["create_squares()"] --> n2["moving_vector = Vector2(vx, vy)"]
+    n2 --> n3["run_away() steering"]
+    n3 --> n4["update_square() integration"]
+    n4 --> n5["position += velocity * dt"]
+    n5 --> n6["draw_world() render"]`,
+  
+  steering: String.raw`graph TD
+    n1["distance_to_others()"] --> n2["larger_squares()"]
+    n2 --> n3["min distance_squared"]
+    n3 --> n4["run_away()"]
+    n4 --> n5["(threat - self).normalize()"]
+    n5 --> n6["apply accel"]
+    n6 --> n7["clamp to max_speed"]`
 };
 
 let renderCounter = 0;
 
-async function renderDiagram(key, containerId) {
+async function renderDiagram(key) {
+  if (!diagrams[key]) return;
+  const containerId = `diag-${key}`;
   const container = document.getElementById(containerId);
   if (!container) return;
+  
   const source = diagrams[key];
-  if (!source) {
-    container.innerHTML = '<p style="color:var(--muted)">No diagram source found.</p>';
-    return;
-  }
-  const uid = 'mmd-' + key + '-' + (++renderCounter);
+  const uid = `mermaid-${key}-${++renderCounter}`;
   try {
-    const { svg, bindFunctions } = await mermaid.render(uid, source);
-    container.innerHTML = svg;
-    if (typeof bindFunctions === 'function') {
-      bindFunctions(container);
-    }
+    const result = await mermaid.render(uid, source);
+    container.innerHTML = result.svg;
   } catch (err) {
-    container.innerHTML = '<pre class="fallback">Render failed: ' + err.message + '\n\nSource:\n' + source + '</pre>';
+    container.innerHTML = `<div class="error-fallback">Diagram error: ${err.message}</div>`;
   }
 }
 
-async function renderAll() {
-  for (const [key] of Object.entries(diagrams)) {
-    await renderDiagram(key, 'diag-' + key);
+async function renderAllDiagrams() {
+  for (const key in diagrams) {
+    await renderDiagram(key);
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   selectReview(0);
-  renderAll();
+  mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+  renderAllDiagrams();
 });
 </script>
 </body>

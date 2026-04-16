@@ -307,3 +307,13 @@
 - **Hook Version**: 1.02
 - **Date**: 16-04-2026 15:30
 - **Prompt**: update the code explorer with the new main.py
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 16-04-2026 15:32
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: update the code explorer with the new main.py
+- **CoPilot Mode**: Edit
+- **CoPilot Model**: GPT-5.4 mini
+- **Socratic Mode**: ON
+- **Changes Made**: Refreshed CODE_EXPLORER.html to match the current main.py behavior, including lifespan respawning, Q-to-quit handling, updated type-hint coverage, current review items, and automatic Mermaid rendering on load.
+- **Context and Reasons for Changes**: User requested the code explorer be updated for the new main.py so the learning dashboard stays aligned with the latest implementation.
