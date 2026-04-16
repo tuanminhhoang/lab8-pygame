@@ -27,7 +27,6 @@ BACKGROUND_COLOR = (20, 24, 28)
 SQUARE_COLOR = (230, 230, 240)
 
 
-@dataclass
 class Square:
     """One moving square in the simulation.
 
@@ -47,7 +46,7 @@ class Square:
         self.size = size
         self.center = Vector2(self.x + (self.size / 2), self.y + (self.size / 2))
 
-    def larger_squares(self, others: List[Square]):
+    def larger_squares(self, others: List[Square]) -> Square:
         """Return all squares from `others` with a strictly larger size."""
         larger = []
         for square in others:
@@ -55,7 +54,7 @@ class Square:
                 larger.append(square)
         return larger
 
-    def distance_to_others(self, others: List[Square]):
+    def distance_to_others(self, others: List[Square]) -> Square:
         """Return the nearest larger square, or self when none exist."""
         larger = self.larger_squares(others)
         distances = []
@@ -103,7 +102,7 @@ def create_squares(count: int) -> List[Square]:
     return squares
 
 
-def check_for_bounds(square: Square, bounds: Tuple[int, int], dt: float):
+def check_for_bounds(square: Square, bounds: Tuple[int, int]):
     """Clamp square to bounds and reflect velocity when a wall is hit."""
     if square.x < 0:
         square.x = 0
@@ -149,7 +148,7 @@ def update_square(
     square.x += float(square.moving_vector[0]) * dt
     square.y += float(square.moving_vector[1]) * dt
 
-    square.x, square.y, square.moving_vector = check_for_bounds(square, bounds, dt)
+    square.x, square.y, square.moving_vector = check_for_bounds(square, bounds)
 
     square.moving_vector = free_from_border(square, bounds)
 
