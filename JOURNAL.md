@@ -348,3 +348,8 @@
 - **Hook Version**: 1.02
 - **Date**: 21-04-2026 22:32
 - **Prompt**: does this make the smaller squares always faster than the larger ones?
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 21-04-2026 23:18
+- **Prompt**: explain me this part, first, why do we have to normalize, and then what does avoid speed do? change the direction? and why do we have to compare the lenght of moving vector with max_speed
