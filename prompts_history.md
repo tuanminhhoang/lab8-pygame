@@ -152,3 +152,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 23:38
 - **Prompt**: it still does not bounce
 
+### 21-04-2026 23:38
+- **Prompt**: Append a new entry to JOURNAL.md at the repo root for 2026-04-21. Summarize that main.py was fixed so wall bounces persist by flipping square.moving_vector on collision, syncing vx/vy from the vector, using bounds-derived max_x/max_y, and moving first then clamping. Mention that get_errors reported no errors. Keep the entry concise and in the repository's existing journal format.
+
