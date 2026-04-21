@@ -122,3 +122,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 22:23
 - **Prompt**: Append a new entry to JOURNAL.md at repo root for this prompt on 2026-04-21. User asked: "what's the problem in line 109?" Investigation found line 109 is pygame.draw.rect call in draw_world; likely issue is upstream bug in update_square assigning return values from check_for_bounds to square.vx and square.vy even though check_for_bounds returns x and y, corrupting velocities. Also handle_event uses pygame.quit() instead of pygame.QUIT and has stray line continuation backslash. No files edited in this interaction. Include concise rationale and no-changes note per journal format.
 
+### 21-04-2026 22:28
+- **Prompt**: in main.py, when a fram is updated, the old square is not deleted, when can be the reason?
+

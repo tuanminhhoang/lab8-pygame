@@ -327,3 +327,19 @@
 - **Hook Version**: 1.02
 - **Date**: 21-04-2026 22:23
 - **Prompt**: Append a new entry to JOURNAL.md at repo root for this prompt on 2026-04-21. User asked: "what's the problem in line 109?" Investigation found line 109 is pygame.draw.rect call in draw_world; likely issue is upstream bug in update_square assigning return values from check_for_bounds to square.vx and square.vy even though check_for_bounds returns x and y, corrupting velocities. Also handle_event uses pygame.quit() instead of pygame.QUIT and has stray line continuation backslash. No files edited in this interaction. Include concise rationale and no-changes note per journal format.
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 21-04-2026 22:23
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: Append a new entry to JOURNAL.md at repo root for this prompt on 2026-04-21. User asked: "what's the problem in line 109?" Investigation found line 109 is pygame.draw.rect call in draw_world; likely issue is upstream bug in update_square assigning return values from check_for_bounds to square.vx and square.vy even though check_for_bounds returns x and y, corrupting velocities. Also handle_event uses pygame.quit() instead of pygame.QUIT and has stray line continuation backslash. No files edited in this interaction. Include concise rationale and no-changes note per journal format.
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: No files edited. Identified likely root cause upstream of line 109: update_square assigns check_for_bounds return values (x, y) into square.vx and square.vy, corrupting velocity state. Also noted handle_event uses pygame.quit() instead of pygame.QUIT and contains a stray line-continuation backslash.
+- **Context and Reasons for Changes**: Line 109 draw call is likely a symptom, not the source of failure. The no-change log captures investigation findings and rationale while preserving current code state for follow-up fixes.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 21-04-2026 22:28
+- **Prompt**: in main.py, when a fram is updated, the old square is not deleted, when can be the reason?
