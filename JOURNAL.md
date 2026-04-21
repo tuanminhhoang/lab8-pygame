@@ -413,3 +413,8 @@
 - **Hook Version**: 1.02
 - **Date**: 21-04-2026 23:52
 - **Prompt**: if im wrong, give me a hint but do i add to square.x like 10 or something if it meets the border?
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 21-04-2026 23:53
+- **Prompt**: it should be the outgoing speed for the next frame?

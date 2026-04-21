@@ -167,3 +167,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 23:52
 - **Prompt**: if im wrong, give me a hint but do i add to square.x like 10 or something if it meets the border?
 
+### 21-04-2026 23:53
+- **Prompt**: it should be the outgoing speed for the next frame?
+
