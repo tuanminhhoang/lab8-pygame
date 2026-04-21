@@ -448,3 +448,8 @@
 - **Hook Version**: 1.02
 - **Date**: 22-04-2026 00:34
 - **Prompt**: larger max speed one?
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 22-04-2026 00:35
+- **Prompt**: so you are trying to say that the steering speed also should be ajusted base on the size?
