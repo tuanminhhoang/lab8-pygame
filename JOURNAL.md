@@ -418,3 +418,8 @@
 - **Hook Version**: 1.02
 - **Date**: 21-04-2026 23:53
 - **Prompt**: it should be the outgoing speed for the next frame?
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 21-04-2026 23:56
+- **Prompt**: like this? if it bounces, the velocity is increase
