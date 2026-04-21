@@ -433,3 +433,8 @@
 - **Hook Version**: 1.02
 - **Date**: 22-04-2026 00:02
 - **Prompt**: my idea is that the square just gain a temporary boost so that it can bounce far away from the border and then the speed should be clamped back to the max speed
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 22-04-2026 00:28
+- **Prompt**: so here, i want a square want to both chase and run, is this the correct approach?
