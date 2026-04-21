@@ -158,3 +158,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 23:48
 - **Prompt**: so, i want the square, when it meets a border, it not only bounce back, but also with a great force
 
+### 21-04-2026 23:49
+- **Prompt**: Append a new entry to JOURNAL.md for 2026-04-21. User prompt: "so, i want the square, when it meets a border, it not only bounce back, but also with a great force". Context gathered by reading current main.py. No code edits applied in this response; provided conceptual guidance in Socratic style. Keep concise and follow existing template.
+
