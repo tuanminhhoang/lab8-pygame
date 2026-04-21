@@ -131,3 +131,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 23:18
 - **Prompt**: explain me this part, first, why do we have to normalize, and then what does avoid speed do? change the direction? and why do we have to compare the lenght of moving vector with max_speed
 
+### 21-04-2026 23:20
+- **Prompt**: so is that maxspeed in the example file different from what i call max speed here in main.py
+
