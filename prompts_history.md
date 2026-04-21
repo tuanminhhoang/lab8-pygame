@@ -125,3 +125,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 21-04-2026 22:28
 - **Prompt**: in main.py, when a fram is updated, the old square is not deleted, when can be the reason?
 
+### 21-04-2026 22:32
+- **Prompt**: does this make the smaller squares always faster than the larger ones?
+
