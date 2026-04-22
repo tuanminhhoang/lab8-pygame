@@ -200,3 +200,6 @@ Automatically captured prompt log. Entries are appended in chronological order (
 ### 22-04-2026 22:11
 - **Prompt**: help me with documenting the file
 
+### 22-04-2026 22:16
+- **Prompt**: update readme with these features. this is a moving square simulation. first, the squares are not moving in random direction, they have a prey to chase and a threat to run from. each frame, the moving vector is steered and updated to do this behavior, and the fleeing is more important so it is represented by a larger turning force secondly, if the squares hit a border, they will be bounce back with temporaly speed boost which also allow the speed to break the max_speed.  third, each square has a life span and will be dead after it reach its predetermined lifespan, a new square will be born around 2 seconds after the old one is dead
+
