@@ -13,9 +13,18 @@ The project focuses on core real-time programming concepts:
 - Boundary collision handling
 - Simple lifetime-based respawning
 
-In the current logic, each square can try to turn away from the closest larger
-square while still bouncing on screen edges. Squares are removed after their
-lifespan ends and respawned so the simulation stays populated.
+In the current logic, each square continuously balances two goals: chase prey
+(smaller nearby square) and run from threat (larger nearby square). The flee
+steering force is stronger than the chase force, so survival has higher
+priority than pursuit.
+
+When a square hits a border, it bounces back and receives a temporary speed
+boost. During this short boost window, its effective speed can exceed
+`max_speed` before decaying back to normal.
+
+Each square has a randomized lifespan. After a square expires, it is replaced,
+and the replacement becomes active after roughly 2 seconds, keeping population
+size stable while introducing a short delay before full participation.
 
 ## Project Structure
 
@@ -64,11 +73,14 @@ python main.py
 ## Behavior Summary
 
 - Creates `SQUARE_COUNT` squares with random size, position, velocity, and lifespan.
+- Uses size-scaled speed, so smaller squares move faster than larger squares.
 - Updates each square every frame using delta time.
-- Applies steering away from the nearest larger square.
-- Reflects velocity when a square hits a window boundary.
-- Removes expired squares and respawns new ones to keep the count stable.
-- Draws all squares and a small text overlay each frame.
+- Applies combined steering each frame: chase nearest smaller square and flee nearest larger square.
+- Weights flee turning force higher than chase turning force so running away dominates when both apply.
+- Reflects movement when a square hits a boundary and applies a temporary bounce boost.
+- Allows short-term boosted movement to exceed normal `max_speed`, then decays boost back to baseline.
+- Expires squares at end of lifespan, respawns replacements, and activates new squares after about 2 seconds.
+- Draws alive squares and a text overlay each frame.
 
 ## Notes
 

@@ -514,3 +514,14 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 22-04-2026 22:18
 - **Prompt**: also add one point that small square always moves faster than ones who are larger than itself
+
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 22-04-2026 22:18
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: also add one point that small square always moves faster than ones who are larger than itself
+- **CoPilot Mode**: Edit
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: Added a new behavior bullet to README.md stating that smaller squares move faster than larger ones due to size-scaled speed.
+- **Context and Reasons for Changes**: User requested one additional feature note in the README to reflect current simulation behavior more clearly.
