@@ -562,3 +562,19 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 27-04-2026 11:31
 - **Prompt**: generate another flash quiz for this project
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 27-04-2026 11:34
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: generate another flash quiz for this project
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: Claude Haiku 4.5
+- **Socratic Mode**: ON
+- **Changes Made**: Updated docs/study_tool.html data payload: replaced Medium-difficulty quiz with Hard-difficulty quiz (15 new flashcards + 15 hard questions). Preserved template v2.0 layout/CSS/JS.
+- **Context and Reasons for Changes**: Hard-difficulty quiz emphasizes debugging, design tradeoffs, complexity analysis, numerical stability, state mutation, and edge cases. Topics include: stale center values, O(N²) performance cliffs, reference cycle leaks, vector normalization traps, boost decay under frame drops, system clock vulnerabilities, and coupling of global constants to behavior.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 27-04-2026 11:45
+- **Prompt**: analyze this project and produce a light refactoring plan
