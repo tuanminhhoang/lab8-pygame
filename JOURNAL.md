@@ -530,3 +530,19 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 27-04-2026 10:53
 - **Prompt**: generate the architecture documents for this project
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 27-04-2026 10:57
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: generate the architecture documents for this project
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: GPT-5.3-Codex
+- **Socratic Mode**: ON
+- **Changes Made**: Created docs/architecture.md and docs/architecture.html with concrete architecture diagrams (dependency, runtime flow, call graph, sequence).
+- **Context and Reasons for Changes**: The project requested architecture documentation for the existing pygame codebase, so diagrams were derived directly from main.py control flow and function relationships.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 27-04-2026 11:28
+- **Prompt**: generate the flash quiz for this project
