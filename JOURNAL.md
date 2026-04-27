@@ -546,3 +546,19 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 27-04-2026 11:28
 - **Prompt**: generate the flash quiz for this project
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 27-04-2026 11:30
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: generate the flash quiz for this project
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: Claude Haiku 4.5
+- **Socratic Mode**: ON
+- **Changes Made**: Created docs/study_tool.html with 15 flashcards and 15-question Medium-difficulty quiz derived from main.py implementation.
+- **Context and Reasons for Changes**: Generated a comprehensive study tool grounded in actual code patterns: steering behavior, game loop architecture, state lifecycle, physics/collision, and nearest-neighbor search. All questions trace to specific functions and code regions with evidence anchors.
+
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 27-04-2026 11:31
+- **Prompt**: generate another flash quiz for this project
