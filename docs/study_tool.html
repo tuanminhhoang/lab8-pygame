@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Mastery - Pygame Squares Study Tool</title>
+  <!-- STUDY_TOOL_TEMPLATE_VERSION: 2.0 -->
+  <style>
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --text: #1a202c;
+      --muted: #718096;
+      --accent: #2d3748;
+      --accent-light: #4299e1;
+      --danger: #e53e3e;
+      --success: #38a169;
+      --radius: 12px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Avenir Next", "Segoe UI", "Trebuchet MS", sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #app {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: var(--accent);
+      border-bottom: 3px solid var(--accent-light);
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.1em;
+      margin: 16px 0 12px;
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    #study-summary {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.98) 100%);
+    }
+
+    .theme-item {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .theme-item:last-child {
+      border-bottom: none;
+    }
+
+    .theme-title {
+      font-weight: 600;
+      color: var(--accent-light);
+      margin-bottom: 6px;
+    }
+
+    #mode-switcher {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: 2px solid var(--accent-light);
+      background: transparent;
+      color: var(--accent-light);
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .mode-btn.active {
+      background: var(--accent-light);
+      color: white;
+    }
+
+    .mode-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+    }
+
+    #flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      perspective: 1000px;
+    }
+
+    .flashcard {
+      position: relative;
+      height: 250px;
+      cursor: pointer;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      outline: none;
+      border: 2px solid transparent;
+    }
+
+    .flashcard:focus {
+      border-color: var(--accent-light);
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3), var(--shadow);
+    }
+
+    .flashcard.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.is-flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-front,
+    .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .flashcard-front {
+      background: linear-gradient(135deg, var(--accent-light) 0%, #2c5aa0 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1.2em;
+      line-height: 1.4;
+    }
+
+    .flashcard-back {
+      background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+      color: white;
+      font-size: 0.95em;
+      line-height: 1.5;
+      transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+
+    #quiz {
+      display: none;
+    }
+
+    #quiz.active {
+      display: block;
+    }
+
+    #flashcards {
+      display: block;
+    }
+
+    #flashcards.hidden {
+      display: none;
+    }
+
+    #quiz-content {
+      min-height: 300px;
+      margin-bottom: 20px;
+    }
+
+    .quiz-question {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .quiz-question.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .question-number {
+      font-size: 0.9em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .question-hint {
+      background: #edf2f7;
+      padding: 12px;
+      border-left: 4px solid var(--accent-light);
+      margin-bottom: 16px;
+      border-radius: 4px;
+      font-size: 0.95em;
+      color: var(--muted);
+    }
+
+    .answer-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .answer-option {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f7fafc;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .answer-option:hover {
+      border-color: var(--accent-light);
+      background: #edf2f7;
+    }
+
+    .answer-option input[type="radio"] {
+      margin-right: 12px;
+    }
+
+    .answer-option.selected {
+      border-color: var(--accent-light);
+      background: rgba(66, 153, 225, 0.05);
+    }
+
+    .answer-option.correct {
+      border-color: var(--success);
+      background: rgba(56, 161, 105, 0.05);
+    }
+
+    .answer-option.incorrect {
+      border-color: var(--danger);
+      background: rgba(229, 62, 62, 0.05);
+    }
+
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      border: 2px solid var(--accent-light);
+      background: transparent;
+      color: var(--accent-light);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--accent-light);
+      color: white;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .submit-btn {
+      padding: 12px 28px;
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      background: #2f855a;
+      transform: translateY(-2px);
+    }
+
+    .question-counter {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #quiz-results {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    #quiz-results.visible {
+      display: block;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .score-display {
+      font-size: 3em;
+      font-weight: bold;
+      color: var(--accent-light);
+      margin: 20px 0;
+    }
+
+    .score-message {
+      font-size: 1.3em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .results-breakdown {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .result-item {
+      padding: 16px;
+      border-left: 4px solid var(--accent-light);
+      background: #edf2f7;
+      border-radius: 4px;
+    }
+
+    .result-question {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .result-answer {
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-size: 0.95em;
+    }
+
+    .result-explanation {
+      background: white;
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--muted);
+      border-left: 3px solid var(--success);
+    }
+
+    .result-answer.incorrect {
+      color: var(--danger);
+    }
+
+    .result-answer.incorrect + .result-explanation {
+      border-left-color: var(--danger);
+    }
+
+    .reset-btn {
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: var(--accent-light);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: #2c5aa0;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      #flashcard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-btn {
+        font-size: 0.9em;
+        padding: 10px 16px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+
+      h2 {
+        font-size: 1.2em;
+      }
+
+      .section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center; margin-bottom: 20px;">🎮 Pygame Squares Mastery (HARD)</h1>
+  
+  <main id="app">
+    <!-- Study Summary -->
+    <section id="study-summary" class="section">
+      <h2>📚 Study Summary (Hard Difficulty)</h2>
+      <p>This advanced study tool focuses on debugging, design tradeoffs, complexity analysis, and edge cases from the Pygame squares simulation. Mastering these concepts separates engineers who understand performance, correctness, and architecture from those who only know syntax.</p>
+      
+      <div class="theme-item">
+        <div class="theme-title">Bugs & State Corruption</div>
+        <p>The code has subtle bugs: stale <code>center</code> values causing incorrect steering, zero-vector normalization crashes, and reference mutation issues in <code>alive()</code>. Understanding when and why these occur is critical for production code.</p>
+      </div>
+
+      <div class="theme-item">
+        <div class="theme-title">Complexity & Scalability</div>
+        <p>The O(N²) nearest-neighbor search works fine for 3 squares but fails catastrophically at 1000. Know when to use spatial hashing, quadtrees, or other optimization strategies. Understand the cost of coupling global constants to behavior.</p>
+      </div>
+
+      <div class="theme-item">
+        <div class="theme-title">Physics & Numerical Stability</div>
+        <p>Floating-point rounding, boost decay under frame drops, Euler integration drift, and system clock adjustments all introduce subtle bugs. Learn to design robust numeric code.</p>
+      </div>
+
+      <div class="theme-item">
+        <div class="theme-title">Design Tradeoffs</div>
+        <p>Why spawn with <code>alive=False</code>? Why hardcode RUNNING_TURN as a module constant? Why normalize before scaling? Each decision has implications for correctness, performance, and maintainability.</p>
+      </div>
+
+      <div class="theme-item">
+        <div class="theme-title">Reference & Lifecycle Invariants</div>
+        <p>Maintain the invariant: <code>len(squares) == SQUARE_COUNT</code> after update. Understand list slicing mutations, garbage collection, memory leaks from reference cycles, and when to use weak references.</p>
+      </div>
+    </section>
+
+    <!-- Mode Switcher -->
+    <section id="mode-switcher" class="section">
+      <button class="mode-btn active" id="flashcard-mode-btn">📇 Flashcards</button>
+      <button class="mode-btn" id="quiz-mode-btn">✏️ Quiz (15 Questions - HARD)</button>
+    </section>
+
+    <!-- Flashcards -->
+    <section id="flashcards" class="section">
+      <h2>Flashcards</h2>
+      <p style="margin-bottom: 20px; color: var(--muted);">Click cards to flip. Use arrow keys or Space to navigate and flip.</p>
+      <div id="flashcard-grid"></div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz" class="section">
+      <h2>Quiz Mode</h2>
+      <div id="quiz-content"></div>
+      <div class="quiz-nav">
+        <button class="nav-btn" id="prev-btn" disabled>← Previous</button>
+        <span class="question-counter"><span id="current-q">1</span> / <span id="total-q">15</span></span>
+        <button class="nav-btn" id="next-btn">Next →</button>
+      </div>
+      <div style="text-align: center;">
+        <button class="submit-btn" id="submit-btn">Submit Quiz</button>
+      </div>
+      <div id="quiz-results"></div>
+    </section>
+  </main>
+
+  <script>
+    // Data payload
+    const flashcards = [
+      {
+        front: "Bug: <code>center</code> not updated before <code>running()</code> call",
+        back: "If <code>center</code> is not recalculated after position integration, steering uses stale distance. The fix: always update <code>center</code> before calling <code>running()</code> or <code>chasing()</code>."
+      },
+      {
+        front: "Design issue: Two-stage spawn delay",
+        back: "Squares spawn with <code>alive=False</code>, then wait 2 seconds. Why not spawn as <code>alive=True</code>? This delays population recovery after mass deaths, creating artificial lag in adaptation."
+      },
+      {
+        front: "Invariant: What must always be true?",
+        back: "<code>len(squares) == SQUARE_COUNT</code> after <code>update_world()</code> (excluding the 2-sec spawn delay). The <code>alive()</code> + <code>reborn()</code> pair maintains this. Violating it breaks balance."
+      },
+      {
+        front: "Edge case: Zero-length vector",
+        back: "When <code>threat == self</code>, <code>running()</code> returns <code>Vector2(0, 0)</code>. If <code>normalize()</code> is called on a zero vector, it fails. Check: <code>if v.length_squared() == 0</code>."
+      },
+      {
+        front: "Performance: Scaling to 1000 squares",
+        back: "With N=1000, <code>update_world()</code> is O(N²) ≈ 1M ops per frame. At 60 FPS, that's 60M ops/sec. Spatial hashing or quadtrees cut this to O(N) per frame."
+      },
+      {
+        front: "State mutation trap: List slicing",
+        back: "In <code>alive()</code>, <code>squares[:] = [...]</code> modifies in-place. If code elsewhere holds a reference to the old list, it silently becomes stale. Use <code>del squares[:]; squares.extend(...)</code> for safer mutation."
+      },
+      {
+        front: "Timing bug: <code>time.time()</code> vs wall-clock",
+        back: "Using wall-clock time (<code>time.time()</code>) for lifespan breaks reproducibility and fails on system clock jumps. Better: track <code>elapsed_time</code> per frame and accumulate."
+      },
+      {
+        front: "Coupling issue: Steering depends on global constants",
+        back: "<code>running()</code> hardcodes <code>RUNNING_TURN</code> (300). If you clone this Square into another scenario, the behavior is locked. Consider making turn rates instance attributes."
+      },
+      {
+        front: "Memory leak potential: Circle references?",
+        back: "Each Square holds a <code>center = Vector2(...)</code>. If squares reference each other (e.g., for mating), Python's GC handles it, but be aware of reference cycles in complex behavior."
+      },
+      {
+        front: "Numerical stability: Boost decay",
+        back: "<code>boost_multiplier -= boost_decay * dt</code>. At very high dt (dropped frames), boost decays faster than expected. At very low dt, decay stalls. Clamp: <code>max(boost_multiplier - ..., 1.0)</code>."
+      },
+      {
+        front: "Why normalize before scaling?",
+        back: "If you scale an un-normalized vector by RUNNING_TURN*dt, the result depends on current distance, creating inconsistent steering. Normalizing first ensures the impulse is independent of distance."
+      },
+      {
+        front: "Predator behavior flaw",
+        back: "<code>chasing()</code> pursues the nearest smaller square, but smaller squares don't run away (no threat logic for them). This creates a static predator-prey imbalance: prey is passive."
+      },
+      {
+        front: "Why <code>distance_squared_to()</code>?",
+        back: "O(1) vs O(sqrt) per comparison. At N=1000, comparing 1M pairs saves ~60M sqrt() calls per frame. Trade-off: lose precision, gain speed. Valid only for ranking, not for absolute distances."
+      },
+      {
+        front: "Concurrency issue: <code>alive()</code> modifies during iteration?",
+        back: "In <code>update_world()</code>, <code>alive()</code> removes expired squares before the loop. If you iterate over <code>squares</code> while removing, Python protects you with list copying, but it's inefficient."
+      },
+      {
+        front: "Integration error: Euler vs RK2",
+        back: "Position update uses simple Euler: <code>x += velocity * dt</code>. At high velocity or low dt, this drifts. RK2 or symplectic methods are more stable, but overkill for game animation."
+      }
+    ];
+
+    const quizData = [
+      {
+        question: "You notice that after 100 frames, a square's <code>center</code> position drifts significantly from (x + size/2, y + size/2). The <code>center</code> is only updated at the END of <code>update_square()</code>. What is the bug?",
+        hint: "If <code>running()</code> is called before <code>center</code> is updated, it uses stale coordinates.",
+        options: [
+          { text: "<code>center</code> is calculated AFTER steering but BEFORE position integration, causing distance checks to use previous frame's position", correct: true },
+          { text: "<code>center</code> is never updated, so it stays at initialization", correct: false },
+          { text: "The size changes each frame, so the midpoint shifts", correct: false },
+          { text: "Floating-point rounding errors accumulate", correct: false }
+        ],
+        explanation: "In <code>update_square()</code>, the order is: check_bounds → steering (uses center) → integrate position → update center. This creates a one-frame lag. For correct steering, center must be updated BEFORE calling running() or chasing()."
+      },
+      {
+        question: "A smaller population (N=10) runs at 60 FPS smoothly. You increase to N=1000, and the frame rate drops to 10 FPS. Why?",
+        hint: "Think about the complexity of threat() and chasing() for all squares.",
+        options: [
+          { text: "<code>update_world()</code> is O(N²), so 1000 squares perform ~1M nearest-neighbor comparisons per frame. At 60 FPS, that's 60M ops/sec, hitting CPU limits.", correct: true },
+          { text: "Pygame's rendering becomes slower with more objects", correct: false },
+          { text: "The lifespan timer gets slower", correct: false },
+          { text: "The boost decay calculation overflows", correct: false }
+        ],
+        explanation: "For each of N squares, threat() and chasing() each iterate through all N squares—O(N) per square. Total: O(N²) per frame. At N=1000, this is 1M comparisons. Mitigation: use spatial hashing to reduce nearest-neighbor queries to O(1) amortized."
+      },
+      {
+        question: "A square with threat == self (no larger neighbors) calls <code>running()</code>. The function returns <code>Vector2(0, 0)</code>. Immediately afterward, <code>clamp_speed()</code> is called. What is the risk?",
+        hint: "What if a zero vector is passed to a function expecting non-zero length?",
+        options: [
+          { text: "<code>moving_vector.scale_to_length(max_speed)</code> on a zero vector throws an error or produces NaN", correct: true },
+          { text: "The vector becomes (1, 1) instead of staying zero", correct: false },
+          { text: "The speed becomes infinite", correct: false },
+          { text: "There is no risk; the code handles it correctly", correct: false }
+        ],
+        explanation: "If <code>moving_vector = Vector2(0, 0)</code> and <code>scale_to_length()</code> is called, the result is undefined (or throws an error in some implementations). The code should check: <code>if v.length_squared() > 0: scale_to_length(...)</code>."
+      },
+      {
+        question: "You want to add a 'starvation' mechanic: predators die if they don't eat. Where is the best place to add this check?",
+        hint: "Consider the lifecycle: alive → update → check conditions → remove.",
+        options: [
+          { text: "In <code>alive()</code> function, add a condition to remove predators with zero food points", correct: true },
+          { text: "In <code>chasing()</code>, decrement food each time the square hunts", correct: false },
+          { text: "In <code>update_square()</code>, check food AFTER position integration", correct: false },
+          { text: "At the end of <code>update_world()</code>, loop through squares again", correct: false }
+        ],
+        explanation: "The <code>alive()</code> function is the centralized removal logic. Adding starvation there keeps removal logic in one place. Attempting to remove during iteration (e.g., in update_square) risks corrupting the loop."
+      },
+      {
+        question: "The boost decay uses: <code>boost_multiplier -= boost_decay * dt</code>. If dt jumps from 0.016 to 0.1 (frame drop), what happens?",
+        hint: "The decay is proportional to dt. A large dt means large decay per frame.",
+        options: [
+          { text: "The boost decays faster than expected, losing the speed advantage prematurely", correct: true },
+          { text: "The boost never decays", correct: false },
+          { text: "The boost decays slower than expected", correct: false },
+          { text: "The boost multiplier becomes negative", correct: false }
+        ],
+        explanation: "With dt=0.1 instead of 0.016, decay is ~6x larger per frame. If boost_decay=3.0, then decay = 3.0 * 0.1 = 0.3 per frame (vs 0.048 normally). The boost vanishes 6x faster, breaking intended balance. Fix: clamp dt to a max value, or use a different decay model."
+      },
+      {
+        question: "The <code>alive()</code> function uses: <code>squares[:] = [square for square in squares if ...]</code>. Why not just <code>squares = [...]</code>?",
+        hint: "Consider what happens to references held elsewhere in the code.",
+        options: [
+          { text: "Using <code>squares[:] = ...</code> modifies the list in-place, preserving the reference. Using <code>squares = ...</code> creates a new list, breaking external references to the old list.", correct: true },
+          { text: "Slice assignment is faster", correct: false },
+          { text: "The slice syntax prevents memory leaks", correct: false },
+          { text: "There is no practical difference", correct: false }
+        ],
+        explanation: "If <code>squares</code> is passed by reference (e.g., as <code>self.squares</code> in a Game class), reassigning <code>squares = [...]` creates a new local variable, breaking the original reference. The slice assignment <code>squares[:] = [...]` modifies the existing list, keeping all references valid."
+      },
+      {
+        question: "You use <code>time.time()</code> for lifespan tracking. What happens if the system clock is adjusted backward by 5 seconds?",
+        hint: "Consider: birth_time=100, current_time is set to 95 due to clock adjustment.",
+        options: [
+          { text: "<code>time.time() - birth_time</code> becomes negative, and the condition <code>... >= life_span</code> never triggers. The square becomes immortal.", correct: true },
+          { text: "The square is immediately removed", correct: false },
+          { text: "An exception is thrown", correct: false },
+          { text: "The lifespan is adjusted automatically", correct: false }
+        ],
+        explanation: "Using wall-clock time is fragile. A system clock adjustment, NTP sync, or VM pause can cause <code>current_time < birth_time</code>, breaking the logic. Better: track elapsed time within the game loop using accumulated dt, not wall-clock time."
+      },
+      {
+        question: "The code hardcodes RUNNING_TURN=300 and CHASING_TURN=200. If you want to clone this Square class into a different simulation (e.g., on a asteroid), what's the coupling issue?",
+        hint: "What if asteroid gravity requires different steering speeds?",
+        options: [
+          { text: "The constants are global module-level values. Changing them affects all squares everywhere, or you must redefine them, breaking encapsulation.", correct: true },
+          { text: "The constants are compiled into the bytecode and cannot be changed at runtime", correct: false },
+          { text: "The constants are stored in each Square instance", correct: false },
+          { text: "There is no coupling issue; the code is modular", correct: false }
+        ],
+        explanation: "Global constants couple the Square logic to specific simulation parameters. Better design: make turn rates instance attributes, initialized in __init__. Then each Square (or simulation) can have its own RUNNING_TURN and CHASING_TURN without modifying module state."
+      },
+      {
+        question: "You add predator-prey mating logic: two squares produce offspring if they're close. Each offspring holds references to both parents. Over 1000 generations, what risk emerges?",
+        hint: "Think about object lifespans and reference chains.",
+        options: [
+          { text: "Memory leaks: if squares outlive their intended lifespan due to parent references, or if parents reference children (cycle), Python's GC may not collect them promptly.", correct: true },
+          { text: "The offspring are too slow", correct: false },
+          { text: "No risk; Python handles all memory automatically", correct: false },
+          { text: "The simulation becomes unstable", correct: false }
+        ],
+        explanation: "Parent → child → parent reference cycles prevent garbage collection until the GC cycle runs. If you spawn 1000 generations with persistent references, you accumulate dead objects in memory. Solution: use weak references (weakref module) or explicitly break parent-child links when a square dies."
+      },
+      {
+        question: "The position integration uses: <code>x += velocity.x * dt</code>. At very high velocity (e.g., 10000 px/sec) and low dt (e.g., 0.001 sec), what numerical issue arises?",
+        hint: "Floating-point precision: adding a large number to a small number.",
+        options: [
+          { text: "Floating-point rounding: 10000 * 0.001 = 10.0 is added to x each frame. Over millions of frames, x drifts due to precision loss.", correct: true },
+          { text: "Integer overflow occurs", correct: false },
+          { text: "The velocity becomes zero", correct: false },
+          { text: "There is no numerical issue at this scale", correct: false }
+        ],
+        explanation: "At 60 FPS with velocity=10000, each frame adds 10000 * (1/60) ≈ 166.67 pixels. Float precision is ~7 significant digits, so after ~1M additions, accumulated error dominates. For better stability, use symplectic integrators or higher-precision arithmetic. For game animation, this drift is usually acceptable."
+      },
+      {
+        question: "You observe: running away from a threat works until the threat dies. Then the square continues in the same direction (no new steering). Why?",
+        hint: "If threat == self, running() returns Vector2(0,0). What happens to moving_vector?",
+        options: [
+          { text: "When threat dies, threat() returns self, running() returns (0,0), and moving_vector is not updated. The square coasts at its current velocity.", correct: true },
+          { text: "The square automatically stops", correct: false },
+          { text: "The square reverses direction", correct: false },
+          { text: "The simulation crashes", correct: false }
+        ],
+        explanation: "<code>moving_vector += running(...) + chasing(...)</code> adds forces. If both return (0,0), no force is added, so the square continues with its previous velocity. This is physically plausible (inertia) but may not be desired game behavior. To add drag, include <code>moving_vector *= damping</code> each frame."
+      },
+      {
+        question: "Two squares occupy the exact same position (e.g., a newborn spawns on top of a dying square). What cascading errors could occur?",
+        hint: "Consider: center distances, vector normalization, boost application.",
+        options: [
+          { text: "distance_squared_to() returns 0, threat() may return the other square unexpectedly, normalize() on zero-vector fails, creating NaN/undefined behavior", correct: true },
+          { text: "The simulation automatically separates them", correct: false },
+          { text: "One square is deleted immediately", correct: false },
+          { text: "Pygame automatically prevents overlaps", correct: false }
+        ],
+        explanation: "Zero-distance collisions violate assumptions in the steering code. Fixes: (1) add a minimum spawn distance check; (2) guard all normalize() calls with length_squared() > 0 check; (3) add collision response (repulsion) to separate overlapping squares."
+      },
+      {
+        question: "Why does the code normalize the steering vector BEFORE multiplying by RUNNING_TURN * dt, rather than AFTER?",
+        hint: "If you scaled first, then normalized, what would change?",
+        options: [
+          { text: "Normalizing before ensures the force magnitude is controlled. Scaling first, then normalizing would always produce a unit vector, losing the force magnitude entirely.", correct: true },
+          { text: "It doesn't matter; both orders produce the same result", correct: false },
+          { text: "Normalizing after is more efficient", correct: false },
+          { text: "Normalizing before prevents division by zero", correct: false }
+        ],
+        explanation: "Order of operations: (1) compute direction vector; (2) normalize to unit vector; (3) scale by force magnitude. If you scale first (apply force), then normalize, you'd always get a unit vector, discarding the force magnitude. The normalization makes the force independent of distance, which is the design goal."
+      }
+    ];
+
+    // State
+    let currentFlashcardIndex = 0;
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let quizSubmitted = false;
+
+    // DOM Elements
+    const flashcardGrid = document.getElementById("flashcard-grid");
+    const quizContent = document.getElementById("quiz-content");
+    const quizResults = document.getElementById("quiz-results");
+    const flashcardsSection = document.getElementById("flashcards");
+    const quizSection = document.getElementById("quiz");
+    const flashcardModeBtn = document.getElementById("flashcard-mode-btn");
+    const quizModeBtn = document.getElementById("quiz-mode-btn");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const currentQSpan = document.getElementById("current-q");
+    const totalQSpan = document.getElementById("total-q");
+
+    // Initialize
+    function init() {
+      renderFlashcards();
+      renderQuiz();
+      setupEventListeners();
+      // Validate DOM
+      validateDOM();
+    }
+
+    function validateDOM() {
+      const requiredElements = [
+        "#quiz-content",
+        ".quiz-nav",
+        "#quiz-results",
+        ".flashcard",
+        ".flashcard-front",
+        ".flashcard-back"
+      ];
+      let allValid = true;
+      for (let selector of requiredElements) {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length === 0) {
+          console.error(`VALIDATION ERROR: Required element missing: ${selector}`);
+          allValid = false;
+        }
+      }
+      for (let i = 0; i < quizData.length; i++) {
+        const q = document.getElementById(`q-${i}`);
+        if (!q) {
+          console.error(`VALIDATION ERROR: Quiz question #${i} missing (id="q-${i}")`);
+          allValid = false;
+        }
+      }
+      if (allValid) {
+        console.log("✓ DOM validation passed");
+      }
+    }
+
+    function renderFlashcards() {
+      flashcardGrid.innerHTML = "";
+      flashcards.forEach((card, idx) => {
+        const flashcard = document.createElement("div");
+        flashcard.className = "flashcard";
+        flashcard.tabIndex = "0";
+        flashcard.role = "button";
+        flashcard.innerHTML = `
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <div>${card.front}</div>
+            </div>
+            <div class="flashcard-back">
+              <div>${card.back}</div>
+            </div>
+          </div>
+        `;
+        flashcard.addEventListener("click", () => flashcard.classList.toggle("is-flipped"));
+        flashcard.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            flashcard.classList.toggle("is-flipped");
+          }
+        });
+        flashcardGrid.appendChild(flashcard);
+      });
+    }
+
+    function renderQuiz() {
+      quizContent.innerHTML = "";
+      quizData.forEach((q, idx) => {
+        const questionDiv = document.createElement("div");
+        questionDiv.className = "quiz-question";
+        questionDiv.id = `q-${idx}`;
+        questionDiv.innerHTML = `
+          <div class="question-number">Question ${idx + 1} of ${quizData.length}</div>
+          <div class="question-text">${q.question}</div>
+          <div class="question-hint"><strong>Hint:</strong> ${q.hint}</div>
+          <div class="answer-options">
+            ${q.options
+              .map(
+                (opt, oidx) => `
+              <label class="answer-option" data-option-idx="${oidx}">
+                <input type="radio" name="q-${idx}" value="${oidx}" />
+                <span>${opt.text}</span>
+              </label>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+        quizContent.appendChild(questionDiv);
+
+        // Add listeners for options
+        const options = questionDiv.querySelectorAll(".answer-option");
+        options.forEach((opt) => {
+          opt.addEventListener("click", () => {
+            options.forEach((o) => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            const input = opt.querySelector("input");
+            const oidx = input.value;
+            userAnswers[idx] = oidx;
+          });
+        });
+      });
+      totalQSpan.textContent = quizData.length;
+      showQuestion(0);
+    }
+
+    function setupEventListeners() {
+      flashcardModeBtn.addEventListener("click", () => {
+        flashcardModeBtn.classList.add("active");
+        quizModeBtn.classList.remove("active");
+        flashcardsSection.classList.remove("hidden");
+        quizSection.classList.remove("active");
+      });
+
+      quizModeBtn.addEventListener("click", () => {
+        quizModeBtn.classList.add("active");
+        flashcardModeBtn.classList.remove("active");
+        flashcardsSection.classList.add("hidden");
+        quizSection.classList.add("active");
+        showQuestion(0);
+      });
+
+      prevBtn.addEventListener("click", () => {
+        if (currentQuestionIndex > 0) {
+          showQuestion(currentQuestionIndex - 1);
+        }
+      });
+
+      nextBtn.addEventListener("click", () => {
+        if (currentQuestionIndex < quizData.length - 1) {
+          showQuestion(currentQuestionIndex + 1);
+        }
+      });
+
+      submitBtn.addEventListener("click", gradeQuiz);
+    }
+
+    function showQuestion(idx) {
+      currentQuestionIndex = idx;
+      currentQSpan.textContent = idx + 1;
+
+      document.querySelectorAll(".quiz-question").forEach((q) => q.classList.remove("active"));
+      const activeQ = document.getElementById(`q-${idx}`);
+      if (activeQ) {
+        activeQ.classList.add("active");
+      }
+
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === quizData.length - 1;
+
+      // Restore answer if already selected
+      const input = activeQ?.querySelector(`input[value="${userAnswers[idx]}"]`);
+      if (input) {
+        input.checked = true;
+        input.closest(".answer-option").classList.add("selected");
+      }
+    }
+
+    function gradeQuiz() {
+      if (quizSubmitted) return;
+      quizSubmitted = true;
+
+      let score = 0;
+      const results = [];
+
+      quizData.forEach((q, idx) => {
+        const selectedIdx = userAnswers[idx];
+        const isCorrect = selectedIdx !== undefined && q.options[selectedIdx].correct;
+        if (isCorrect) score++;
+
+        results.push({
+          question: q.question,
+          selected: selectedIdx !== undefined ? q.options[selectedIdx].text : "Not answered",
+          isCorrect: isCorrect,
+          explanation: q.explanation,
+          correctAnswer: q.options.find((o) => o.correct).text
+        });
+
+        // Update UI
+        const questionDiv = document.getElementById(`q-${idx}`);
+        const options = questionDiv.querySelectorAll(".answer-option");
+        options.forEach((opt) => {
+          const input = opt.querySelector("input");
+          const isSelectedAnswer = input.value == selectedIdx;
+          const isCorrectAnswer = q.options[input.value].correct;
+
+          opt.classList.remove("selected");
+          if (isSelectedAnswer) {
+            opt.classList.add(isCorrectAnswer ? "correct" : "incorrect");
+          }
+        });
+      });
+
+      // Show results
+      quizContent.style.display = "none";
+      submitBtn.style.display = "none";
+
+      const percentage = Math.round((score / quizData.length) * 100);
+      let message = "";
+      if (percentage === 100) {
+        message = "Perfect! Master-level understanding! 🏆";
+      } else if (percentage >= 80) {
+        message = "Excellent! Strong grasp of the concepts. 🎯";
+      } else if (percentage >= 60) {
+        message = "Good effort! Review the explanations to solidify your knowledge. 📖";
+      } else {
+        message = "Keep studying! The explanations below will help. 💪";
+      }
+
+      let resultsHtml = `
+        <div class="results-header">
+          <div class="score-message">${message}</div>
+          <div class="score-display">${score} / ${quizData.length}</div>
+          <p style="color: var(--muted);">${percentage}% Correct</p>
+        </div>
+        <div class="results-breakdown">
+      `;
+
+      results.forEach((r, idx) => {
+        resultsHtml += `
+          <div class="result-item">
+            <div class="result-question">Q${idx + 1}: ${r.question}</div>
+            <div class="result-answer ${r.isCorrect ? "" : "incorrect"}">
+              Your answer: ${r.selected}
+            </div>
+            ${!r.isCorrect ? `<div class="result-answer">Correct answer: ${r.correctAnswer}</div>` : ""}
+            <div class="result-explanation">${r.explanation}</div>
+          </div>
+        `;
+      });
+
+      resultsHtml += `</div>`;
+      quizResults.innerHTML = resultsHtml;
+      quizResults.classList.add("visible");
+
+      const resetBtn = document.createElement("button");
+      resetBtn.className = "reset-btn";
+      resetBtn.textContent = "Retake Quiz";
+      resetBtn.addEventListener("click", resetQuiz);
+      quizResults.appendChild(resetBtn);
+    }
+
+    function resetQuiz() {
+      quizSubmitted = false;
+      userAnswers = {};
+      currentQuestionIndex = 0;
+      quizContent.style.display = "block";
+      submitBtn.style.display = "inline-block";
+      quizResults.classList.remove("visible");
+      quizResults.innerHTML = "";
+      renderQuiz();
+    }
+
+    // Launch
+    init();
+  </script>
+</body>
+</html>

@@ -22,7 +22,7 @@ import time
 SCREEN_WIDTH: int = 1200
 SCREEN_HEIGHT: int = 800
 FPS:  float = 60.0
-SQUARE_COUNT: int = 45
+SQUARE_COUNT: int = 3
 RUNNING_TURN: int = 300
 CHASING_TURN: int = 200
 BACKGROUND_COLOR = (20, 24, 28)
@@ -160,6 +160,33 @@ def alive(squares: List[Square]) -> List[Square]:
     squares[:] = [square for square in squares if time.time() - square.birth_time < square.life_span]
     return squares
 
+def eat(squares: List[Square]) -> List[Square]:
+    """Check for collisions and allow bigger squares to consume smaller ones."""
+    to_remove = []
+    for i, square1 in enumerate(squares):
+        for j, square2 in enumerate(squares):
+            if i != j and square2 not in to_remove:
+                # Check if squares are colliding (centers are close enough)
+                distance = square1.center.distance_to(square2.center)
+                collision_distance = (square1.size + square2.size) / 2
+                
+                if distance < collision_distance:
+                    # Determine which one eats which
+                    if square1.size > square2.size:
+                        # square1 eats square2
+                        square1.size += square2.size
+                        square1.center = Vector2(square1.x + square1.size / 2, square1.y + square1.size / 2)
+                        to_remove.append(square2)
+                    elif square2.size > square1.size:
+                        # square2 eats square1
+                        square2.size += square1.size
+                        square2.center = Vector2(square2.x + square2.size / 2, square2.y + square2.size / 2)
+                        to_remove.append(square1)
+    
+    # Remove eaten squares from the list
+    squares[:] = [square for square in squares if square not in to_remove]
+    return squares
+
 def reborn(squares: List[Square]) -> List[Square]:
     """Respawn squares until the world reaches SQUARE_COUNT."""
     while len(squares) < SQUARE_COUNT:
@@ -223,6 +250,7 @@ def update_square(square: Square, squares: List[Square], bounds: Tuple[int, int]
 def update_world(squares: List[Square], bounds: Tuple[int, int], dt: float):
     """Update all simulation entities for one frame."""
     squares = alive(squares)
+    squares = eat(squares)
     squares = reborn(squares)
     for square in squares:
         update_square(square, squares, bounds, dt)

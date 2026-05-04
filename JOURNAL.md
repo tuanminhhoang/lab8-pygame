@@ -578,3 +578,14 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 27-04-2026 11:45
 - **Prompt**: analyze this project and produce a light refactoring plan
+### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 27-04-2026 11:46
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: analyze this project and produce a light refactoring plan
+- **CoPilot Mode**: Agent
+- **CoPilot Model**: Claude Haiku 4.5
+- **Socratic Mode**: ON
+- **Changes Made**: Created refactoring.plan.md with 7-step beginner-friendly refactoring plan for main.py.
+- **Context and Reasons for Changes**: Analyzed code for code duplication, magic numbers, method complexity, and unused variables. Plan focuses on DRY principle, separation of concerns, and named constants while preserving behavior.
+
