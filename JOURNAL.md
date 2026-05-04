@@ -599,3 +599,8 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 04-05-2026 10:54
 - **Prompt**: continue please
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 04-05-2026 11:04
+- **Prompt**: use colliderect correctly
