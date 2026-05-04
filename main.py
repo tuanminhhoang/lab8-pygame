@@ -24,10 +24,12 @@ SCREEN_HEIGHT: int = 800
 FPS:  float = 60.0
 SQUARE_COUNT: int = 45
 SQUARE_SIZE: list = [25, 25, 25, 25, 25, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+MAX_SIZE: int = 50
 RUNNING_TURN: int = 300
 CHASING_TURN: int = 200
 BACKGROUND_COLOR = (20, 24, 28)
 SQUARE_COLOR = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255), (255, 165, 0), (255, 20, 147), (0, 255, 127), (255, 69, 0)]
+TRAILS_LENGTH = 30
 
 class Square:
     """Represents one moving square in the simulation.
@@ -52,6 +54,20 @@ class Square:
         self.birth_time = birth_time
         self.life_span = life_span
         self.alive = alive
+
+    def screen_wrapping(self, bounds: Tuple[int, int]):
+        width, height = bounds
+        if self.x < 0 - self.size:
+            self.x = width - self.size
+        elif self.x > width:
+            self.x = 0
+
+        if self.y < 0 - self.size:
+            self.y = height - self.size
+        elif self.y > height:
+            self.y = 0
+
+        return self.x, self.y, self.moving_vector
 
     def check_for_bounds(self, bounds: Tuple[int, int]):
         """Clamp position to screen bounds and bounce velocity if needed.
@@ -154,62 +170,85 @@ class Square:
         if self.moving_vector.length() > self.max_speed: 
             self.moving_vector.scale_to_length(self.max_speed) 
         return self.moving_vector
-    
+
 def eat(squares: List[Square]) -> List[Square]:
     """Check for collisions and allow bigger squares to consume smaller ones."""
-    to_remove = []
+    to_remove: List[Square] = []
     for i, square1 in enumerate(squares):
+        rect1 = pygame.Rect(square1.x, square1.y, square1.size, square1.size)
         for j, square2 in enumerate(squares):
-            if i != j and square2 not in to_remove:
-                # Check if squares are colliding (centers are close enough)
-                distance = square1.center.distance_to(square2.center)
-                collision_distance = (square1.size + square2.size) / 2
-                
-                if distance < collision_distance:
-                    # Determine which one eats which
-                    if square1.size > square2.size:
-                        # square1 eats square2
-                        square1.size += square2.size
-                        square1.center = Vector2(square1.x + square1.size / 2, square1.y + square1.size / 2)
-                        to_remove.append(square2)
-                    elif square2.size > square1.size:
-                        # square2 eats square1
-                        square2.size += square1.size
-                        square2.center = Vector2(square2.x + square2.size / 2, square2.y + square2.size / 2)
-                        to_remove.append(square1)
-    
-    # Remove eaten squares from the list
+            if i == j or square2 in to_remove:
+                continue
+            rect2 = pygame.Rect(square2.x, square2.y, square2.size, square2.size)
+            if rect1.colliderect(rect2):
+                if square1.size > square2.size:
+                    # square1 eats square2
+                    if square1.size <= MAX_SIZE:
+                        square1.size += square2.size * 0.1
+                    square1.center = Vector2(square1.x + square1.size / 2, square1.y + square1.size / 2)
+                    to_remove.append(square2)
+                elif square2.size > square1.size:
+                    # square2 eats square1
+                    if square2.size <= MAX_SIZE:
+                        square2.size += square1.size * 0.1
+                    square2.center = Vector2(square2.x + square2.size / 2, square2.y + square2.size / 2)
+                    to_remove.append(square1)
+
     squares[:] = [square for square in squares if square not in to_remove]
     return squares
 
 
-def check_for_alive(squares: List[Square]) -> List[Square]:
-    """Remove expired squares based on lifespan."""
-    new_squares = []
-    inherit = []
+def check_for_alive(squares: List[Square]) -> Tuple[List[Square], List[int]]:
+    """Return alive squares and sizes of expired squares for respawn.
+
+    Alive squares are returned first. The second returned list contains the
+    sizes of squares that expired and should be used when respawning new
+    squares (see `reborn`). The previous implementation inverted these
+    values which could clear the world each frame.
+    """
+    alive: List[Square] = []
+    expired_sizes: List[int] = []
     for square in squares:
         if time.time() - square.birth_time < square.life_span:
-            inherit.append(square.size)
+            alive.append(square)
         else:
-            new_squares.append(square)
-    return new_squares, inherit
+            expired_sizes.append(square.size)
+    return alive, expired_sizes
 
-def reborn(squares: List[Square]) -> List[Square]:
-    """Respawn squares until the world reaches SQUARE_COUNT."""
-    new_squares, inherit = check_for_alive(squares)
-    for old_size in inherit:
+def reborn(squares: List[Square], expired_sizes: List[int]) -> List[Square]:
+    """Respawn new squares for each expired size and return updated list.
+
+    `squares` should be the list of currently alive squares. `expired_sizes`
+    contains sizes of squares that need to be respawned.
+    """
+    for old_size in expired_sizes:
         color = random.choice(SQUARE_COLOR)
         size = old_size
         x = random.randint(0, SCREEN_WIDTH - size)
         y = random.randint(0, SCREEN_HEIGHT - size)
         vx = random.choice([-2200, 2200]) * 1/size
         vy = random.choice([-2200, 2200]) * 1/size
-        max_speed= 2200 * 1/size
+        max_speed = 2200 * 1/size
         birth_time = time.time()
         life_span = random.randint(30, 60)
         alive = False
         squares.append(Square(color, size, x, y, vx, vy, max_speed, birth_time, life_span, alive))
-    return squares    
+    return squares
+
+def draw_trail(squares: List[Square], screen) -> None:
+    for square in squares:
+        start_pos = (square.center.x, square.center.y)
+        if square.moving_vector.x < 0 and square.moving_vector.y < 0:
+            end_pos = (square.x + TRAILS_LENGTH, square.y + TRAILS_LENGTH)
+        elif square.moving_vector.x > 0 and square.moving_vector.y < 0:
+            end_pos = (square.x - TRAILS_LENGTH, square.y + TRAILS_LENGTH)
+        elif square.moving_vector.x < 0 and square.moving_vector.y > 0:
+            end_pos = (square.x + TRAILS_LENGTH, square.y - TRAILS_LENGTH)
+        elif square.moving_vector.x > 0 and square.moving_vector.y > 0:
+            end_pos = (square.x - TRAILS_LENGTH, square.y - TRAILS_LENGTH)
+        color = square.color
+        width: int = 2
+        pygame.draw.line(screen, color, start_pos, end_pos, width)
 
 def create_squares() -> List[Square]:
     """Create the initial set of random squares."""
@@ -257,8 +296,9 @@ def update_square(square: Square, squares: List[Square], bounds: Tuple[int, int]
 
 def update_world(squares: List[Square], bounds: Tuple[int, int], dt: float):
     """Update all simulation entities for one frame."""
-    squares, new_size = check_for_alive(squares)
-    squares = reborn(squares)
+    alive, expired_sizes = check_for_alive(squares)
+    alive = eat(alive)
+    squares = reborn(alive, expired_sizes)
     for square in squares:
         update_square(square, squares, bounds, dt)
 
@@ -268,6 +308,7 @@ def draw_world(screen: pygame.Surface, squares: List[Square]):
     for square in squares:
         if square.alive:
             pygame.draw.rect(screen, square.color, pygame.Rect(square.x, square.y, square.size, square.size))
+            draw_trail(squares, screen)
 
 def draw_text(text: str, font: pygame.font.Font, text_col, x: int, y: int, screen: pygame.Surface):
     """Render a single text label at the given screen position."""
