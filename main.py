@@ -23,6 +23,7 @@ SCREEN_WIDTH: int = 1200
 SCREEN_HEIGHT: int = 800
 FPS:  float = 60.0
 SQUARE_COUNT: int = 45
+SQUARE_SIZE: list = [25, 25, 25, 25, 25, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
 RUNNING_TURN: int = 300
 CHASING_TURN: int = 200
 BACKGROUND_COLOR = (20, 24, 28)
@@ -179,9 +180,9 @@ def reborn(squares: List[Square]) -> List[Square]:
 def create_squares() -> List[Square]:
     """Create the initial set of random squares."""
     squares = []
-    for _ in range(SQUARE_COUNT):
+    for number in SQUARE_SIZE:
         color = random.choice(SQUARE_COLOR)
-        size = random.randint(20, 40)
+        size = number 
         x = random.randint(0, SCREEN_WIDTH - size)
         y = random.randint(0, SCREEN_HEIGHT - size)
         vx = random.choice([-2200, 2200]) * 1/size
