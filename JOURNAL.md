@@ -1,6 +1,16 @@
 # This Journal gets updated automatically by the Journal Logger Agent
 
 ### **New Interaction**
+- **Agent Version**: 2.3
+- **Date**: 05-04-2026 13:40
+- **User**: tuan-minh.hoang@epita.fr
+- **Prompt**: continue
+- **CoPilot Mode**: Edit
+- **CoPilot Model**: GPT-5.4 mini
+- **Socratic Mode**: ON
+- **Changes Made**: no code changes yet; resumed work on the collision-removal and trail-drawing fixes after a patch formatting retry.
+- **Context and Reasons for Changes**: continue request after a failed edit attempt, so the next step is to apply the targeted fix and verify it.
+
 - **Hook Version**: 1.02
 - **Date**: 05-04-2026 11:25
 - **Prompt**: activate the journal logger
@@ -614,3 +624,8 @@ third, each square has a life span and will be dead after it reach its predeterm
 - **Hook Version**: 1.02
 - **Date**: 04-05-2026 11:32
 - **Prompt**: continue
+
+### **New Interaction**
+- **Hook Version**: 1.02
+- **Date**: 04-05-2026 12:37
+- **Prompt**: help me with the random steer
