@@ -155,6 +155,33 @@ class Square:
             self.moving_vector.scale_to_length(self.max_speed) 
         return self.moving_vector
     
+def eat(squares: List[Square]) -> List[Square]:
+    """Check for collisions and allow bigger squares to consume smaller ones."""
+    to_remove = []
+    for i, square1 in enumerate(squares):
+        for j, square2 in enumerate(squares):
+            if i != j and square2 not in to_remove:
+                # Check if squares are colliding (centers are close enough)
+                distance = square1.center.distance_to(square2.center)
+                collision_distance = (square1.size + square2.size) / 2
+                
+                if distance < collision_distance:
+                    # Determine which one eats which
+                    if square1.size > square2.size:
+                        # square1 eats square2
+                        square1.size += square2.size
+                        square1.center = Vector2(square1.x + square1.size / 2, square1.y + square1.size / 2)
+                        to_remove.append(square2)
+                    elif square2.size > square1.size:
+                        # square2 eats square1
+                        square2.size += square1.size
+                        square2.center = Vector2(square2.x + square2.size / 2, square2.y + square2.size / 2)
+                        to_remove.append(square1)
+    
+    # Remove eaten squares from the list
+    squares[:] = [square for square in squares if square not in to_remove]
+    return squares
+
 
 def check_for_alive(squares: List[Square]) -> List[Square]:
     """Remove expired squares based on lifespan."""
