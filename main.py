@@ -156,16 +156,23 @@ class Square:
         return self.moving_vector
     
 
-def alive(squares: List[Square]) -> List[Square]:
+def check_for_alive(squares: List[Square]) -> List[Square]:
     """Remove expired squares based on lifespan."""
-    squares[:] = [square for square in squares if time.time() - square.birth_time < square.life_span]
-    return squares
+    new_squares = []
+    inherit = []
+    for square in squares:
+        if time.time() - square.birth_time < square.life_span:
+            inherit.append(square.size)
+        else:
+            new_squares.append(square)
+    return new_squares, inherit
 
 def reborn(squares: List[Square]) -> List[Square]:
     """Respawn squares until the world reaches SQUARE_COUNT."""
-    while len(squares) < SQUARE_COUNT:
+    new_squares, inherit = check_for_alive(squares)
+    for old_size in inherit:
         color = random.choice(SQUARE_COLOR)
-        size = random.randint(20, 40)
+        size = old_size
         x = random.randint(0, SCREEN_WIDTH - size)
         y = random.randint(0, SCREEN_HEIGHT - size)
         vx = random.choice([-2200, 2200]) * 1/size
@@ -223,7 +230,7 @@ def update_square(square: Square, squares: List[Square], bounds: Tuple[int, int]
 
 def update_world(squares: List[Square], bounds: Tuple[int, int], dt: float):
     """Update all simulation entities for one frame."""
-    squares = alive(squares)
+    squares, new_size = check_for_alive(squares)
     squares = reborn(squares)
     for square in squares:
         update_square(square, squares, bounds, dt)
